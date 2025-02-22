@@ -53,30 +53,31 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Major Cineplex Clone')),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Movie Carousel
-            CarouselSlider(
-              options: CarouselOptions(autoPlay: true, height: 200, enlargeCenterPage: true),
-              items: movieBanners.map((url) {
-                return ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(url, fit: BoxFit.cover),
-                );
-              }).toList(),
-            ),
-            SizedBox(height: 20),
-            sectionTitle('Now Showing'),
-            movieList(movies),
-            sectionTitle('Discounts'),
-            discountList(discounts),
-            sectionTitle('Coming Soon'),
-            movieList(comingSoon, isComingSoon: true),
-            sectionTitle('Latest Technology'),
-            technologyGrid(technologies),  // Updated call
-          ],
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              CarouselSlider(
+                options: CarouselOptions(autoPlay: true, height: 200, enlargeCenterPage: true),
+                items: movieBanners.map((url) {
+                  return ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(url, fit: BoxFit.cover),
+                  );
+                }).toList(),
+              ),
+              SizedBox(height: 20),
+              sectionTitle('Now Showing'),
+              movieList(movies),
+              sectionTitle('Discounts'),
+              discountList(discounts),
+              sectionTitle('Coming Soon'),
+              movieList(comingSoon, isComingSoon: true),
+              sectionTitle('Latest Technology'),
+              technologyGrid(technologies),
+            ],
+          ),
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -97,8 +98,8 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget movieList(List<Map<String, dynamic>> movies, {bool isComingSoon = false}) {
-    return Container(
-      height: 200,
+    return SizedBox(
+      height: 220,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: movies.length,
@@ -116,10 +117,6 @@ class HomeScreen extends StatelessWidget {
                 SizedBox(height: 5),
                 Text(movie['title'], style: TextStyle(fontWeight: FontWeight.bold)),
                 Text(movie['date'], style: TextStyle(color: Colors.grey)),
-                Wrap(
-                  spacing: 5,
-                  children: movie['genres'].map<Widget>((genre) => Chip(label: Text(genre, style: TextStyle(fontSize: 10)), visualDensity: VisualDensity.compact)).toList(),
-                ),
               ],
             ),
           );
@@ -129,8 +126,8 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget discountList(List<Map<String, String>> discounts) {
-    return Container(
-      height: 120,
+    return SizedBox(
+      height: 140,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: discounts.length,
@@ -174,7 +171,7 @@ class HomeScreen extends StatelessWidget {
                   technology['image']!,
                   width: 60,
                   height: 60,
-                  fit: BoxFit.contain, // Changed from BoxFit.cover to BoxFit.contain
+                  fit: BoxFit.contain,
                 ),
               ),
               SizedBox(height: 5),
@@ -189,5 +186,4 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
-
 }
