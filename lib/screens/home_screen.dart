@@ -38,8 +38,15 @@ class HomeScreen extends StatelessWidget {
     {'poster': 'assets/images/coming2.jpg', 'title': 'Mobile Suit Gundam', 'date': '27 Feb 2025', 'genres': ['Drama', 'Action']},
   ];
 
-  final List<String> technologies = [
-    'IMAX', '4DX', 'Dolby Atmos', 'Kids Cinema', 'GLS', 'ScreenX', 'LaserPlex', 'LED Cinema'
+  final List<Map<String, String>> technologies = [
+    {'name': 'IMAX', 'image': 'assets/images/imax.jpg'},
+    {'name': '4DX', 'image': 'assets/images/4dx.jpg'},
+    {'name': 'Dolby Atmos', 'image': 'assets/images/dolby_atmos.jpg'},
+    {'name': 'Kids Cinema', 'image': 'assets/images/kids_cinema.jpg'},
+    {'name': 'GLS', 'image': 'assets/images/gls.jpg'},
+    {'name': 'ScreenX', 'image': 'assets/images/screenx.jpg'},
+    {'name': 'LaserPlex', 'image': 'assets/images/laserplex.jpg'},
+    {'name': 'LED Cinema', 'image': 'assets/images/led_cinema.jpg'},
   ];
 
   @override
@@ -68,7 +75,7 @@ class HomeScreen extends StatelessWidget {
             sectionTitle('Coming Soon'),
             movieList(comingSoon, isComingSoon: true),
             sectionTitle('Latest Technology'),
-            technologyGrid(technologies.cast<Map<String, String>>()),
+            technologyGrid(technologies),  // Updated call
           ],
         ),
       ),
@@ -167,7 +174,7 @@ class HomeScreen extends StatelessWidget {
                   technology['image']!,
                   width: 60,
                   height: 60,
-                  fit: BoxFit.cover,
+                  fit: BoxFit.contain, // Changed from BoxFit.cover to BoxFit.contain
                 ),
               ),
               SizedBox(height: 5),
