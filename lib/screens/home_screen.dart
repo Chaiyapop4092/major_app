@@ -16,7 +16,14 @@ class MajorCloneApp extends StatelessWidget {
   }
 }
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
+  @override
+  _HomeScreenState createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _currentIndex = 0;  // Keep track of the current banner index
+
   final List<String> movieBanners = [
     'assets/images/banner1.jpg',
     'assets/images/banner2.jpg',
@@ -67,10 +74,10 @@ class HomeScreen extends StatelessWidget {
             icon: Icon(Icons.person),
             onPressed: () {
               // Navigate to login page (replace with actual login screen)
-              Navigator.push(
+              /*Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => LoginPage()),
-              );
+              );*/
             },
           ),
         ],
@@ -82,11 +89,39 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CarouselSlider(
-                options: CarouselOptions(autoPlay: true, height: 200, enlargeCenterPage: true),
+                options: CarouselOptions(
+                  autoPlay: true,
+                  height: 200,
+                  enlargeCenterPage: true,
+                  onPageChanged: (index, reason) {
+                    setState(() {
+                      _currentIndex = index;
+                    });
+                  },
+                ),
                 items: movieBanners.map((url) {
                   return ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Image.asset(url, fit: BoxFit.cover),
+                  );
+                }).toList(),
+              ),
+              SizedBox(height: 10),
+              // Dots below the banner
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: movieBanners.map((url) {
+                  int index = movieBanners.indexOf(url);
+                  return Container(
+                    margin: EdgeInsets.symmetric(horizontal: 5),
+                    width: 8,
+                    height: 8,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: _currentIndex == index
+                          ? Color(0xFFFFC107)  // Custom yellow color for the selected dot
+                          : Colors.grey,  // Grey for unselected dots
+                    ),
                   );
                 }).toList(),
               ),
@@ -103,40 +138,69 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-  type: BottomNavigationBarType.fixed, // This ensures all 5 items are shown
-  items: [
-    BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-    BottomNavigationBarItem(icon: Icon(Icons.movie), label: 'Movies'),
-    BottomNavigationBarItem(icon: Icon(Icons.location_on), label: 'Cinemas'),
-    BottomNavigationBarItem(icon: Icon(Icons.discount), label: 'Discount'),
-    BottomNavigationBarItem(icon: Icon(Icons.more_horiz), label: 'More'),
-  ],
-  onTap: (index) {
-    // Handle navigation when an item is tapped
-    // Example: switch between different screens (you may need to create different screens for each tab)
-    switch (index) {
-      case 0:
-        // Navigate to Home
-        break;
-      case 1:
-        // Navigate to Movies
-        break;
-      case 2:
-        // Navigate to Cinemas
-        break;
-      case 3:
-        // Navigate to Discounts
-        break;
-      case 4:
-        // Navigate to More
-        break;
-      default:
-        break;
-    }
-  },
-),
-
+      bottomNavigationBar: ClipRRect(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+        child: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.grey[800],  // Dark grey background
+          selectedItemColor: Color(0xFFFFC107), // Custom subtle yellow color
+          unselectedItemColor: Colors.grey,  // Grey for unselected items
+          showUnselectedLabels: false,  // Hide label for unselected icons
+          selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),  // Bold label for selected tab
+          items: [
+            BottomNavigationBarItem(
+              icon: Icon(Icons.home),
+              label: 'Home',
+              backgroundColor: Colors.transparent,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.movie),
+              label: 'Movies',
+              backgroundColor: Colors.transparent,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.location_on),
+              label: 'Cinemas',
+              backgroundColor: Colors.transparent,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.discount),
+              label: 'Discount',
+              backgroundColor: Colors.transparent,
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.more_horiz),
+              label: 'More',
+              backgroundColor: Colors.transparent,
+            ),
+          ],
+          onTap: (index) {
+            // Handle tab selection
+            switch (index) {
+              case 0:
+                // Navigate to Home
+                break;
+              case 1:
+                // Navigate to Movies
+                break;
+              case 2:
+                // Navigate to Cinemas
+                break;
+              case 3:
+                // Navigate to Discount
+                break;
+              case 4:
+                // Navigate to More
+                break;
+              default:
+                break;
+            }
+          },
+        ),
+      ),
     );
   }
 
@@ -234,17 +298,6 @@ class HomeScreen extends StatelessWidget {
           );
         },
       ),
-    );
-  }
-}
-
-// Dummy LoginPage for navigation
-class LoginPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Login')),
-      body: Center(child: Text('Login Page')),
     );
   }
 }
