@@ -104,12 +104,39 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.movie), label: 'Movies'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Profile'),
-        ],
-      ),
+  type: BottomNavigationBarType.fixed, // This ensures all 5 items are shown
+  items: [
+    BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+    BottomNavigationBarItem(icon: Icon(Icons.movie), label: 'Movies'),
+    BottomNavigationBarItem(icon: Icon(Icons.location_on), label: 'Cinemas'),
+    BottomNavigationBarItem(icon: Icon(Icons.discount), label: 'Discount'),
+    BottomNavigationBarItem(icon: Icon(Icons.more_horiz), label: 'More'),
+  ],
+  onTap: (index) {
+    // Handle navigation when an item is tapped
+    // Example: switch between different screens (you may need to create different screens for each tab)
+    switch (index) {
+      case 0:
+        // Navigate to Home
+        break;
+      case 1:
+        // Navigate to Movies
+        break;
+      case 2:
+        // Navigate to Cinemas
+        break;
+      case 3:
+        // Navigate to Discounts
+        break;
+      case 4:
+        // Navigate to More
+        break;
+      default:
+        break;
+    }
+  },
+),
+
     );
   }
 
