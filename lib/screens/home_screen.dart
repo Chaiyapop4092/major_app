@@ -10,7 +10,6 @@ class MajorCloneApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Major Cineplex Clone',
       theme: ThemeData.dark(),
       home: HomeScreen(),
     );
@@ -52,7 +51,29 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Major Cineplex Clone')),
+      appBar: AppBar(
+        title: Row(
+          children: [
+            Image.asset(
+              'assets/images/major_logo.png', // Ensure the path to your logo is correct
+              height: 40, // Adjust the size of the logo as needed
+            ),
+            SizedBox(width: 10),
+          ],
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.person),
+            onPressed: () {
+              // Navigate to login page (replace with actual login screen)
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => LoginPage()),
+              );
+            },
+          ),
+        ],
+      ),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
@@ -184,6 +205,17 @@ class HomeScreen extends StatelessWidget {
           );
         },
       ),
+    );
+  }
+}
+
+// Dummy LoginPage for navigation
+class LoginPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Login')),
+      body: Center(child: Text('Login Page')),
     );
   }
 }
