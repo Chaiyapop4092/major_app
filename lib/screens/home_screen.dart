@@ -52,6 +52,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.black,  // Make the AppBar background color the same as the dark theme
         title: Row(
           children: [
             Image.asset(
@@ -74,6 +75,7 @@ class HomeScreen extends StatelessWidget {
           ),
         ],
       ),
+
       body: SafeArea(
         child: SingleChildScrollView(
           child: Column(
