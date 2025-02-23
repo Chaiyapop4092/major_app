@@ -18,12 +18,12 @@ class _MoviesScreenState extends State<MoviesScreen> {
         actions: [
           IconButton(
             icon: Icon(
-              isGridView ? Icons.grid_on : Icons.view_list, // Toggle between grid and list icon
+              isGridView ? Icons.grid_on : Icons.grid_off,
               color: Colors.white,
             ),
             onPressed: () {
               setState(() {
-                isGridView = !isGridView; // Toggle the view
+                isGridView = !isGridView;
               });
             },
           ),
@@ -149,7 +149,7 @@ class _MoviesScreenState extends State<MoviesScreen> {
                           title: 'Movie $index',
                           releaseDate: 'Release Date',
                           genres: ['Genre 1', 'Genre 2'],
-                          imageUrl: 'assets/movie_image.jpg',
+                          imageUrl: 'assets/images/movie1.jpg',
                         );
                       },
                     )
@@ -160,13 +160,13 @@ class _MoviesScreenState extends State<MoviesScreen> {
                           title: 'Den of Thieves Pantera',
                           releaseDate: '20 Feb 2025',
                           genres: ['Crime', 'Drama'],
-                          imageUrl: 'assets/den_of_thieves.jpg',
+                          imageUrl: 'assets/images/movie2.jpg',
                         ),
                         MovieCard(
                           title: 'Avengers: Endgame',
                           releaseDate: '26 Apr 2019',
                           genres: ['Action', 'Sci-Fi'],
-                          imageUrl: 'assets/avengers_endgame.jpg',
+                          imageUrl: 'assets/images/movie3.jpg',
                         ),
                         MovieCard(
                           title: 'The Batman',
