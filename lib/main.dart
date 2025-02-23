@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:major_app/screens/home_screen.dart';// Import your home screen file
+import 'package:major_app/screens/home_screen.dart';
+import 'package:major_app/screens/movies_screen.dart';// Import your home screen file
 
 void main() {
   runApp(MajorCloneApp());
@@ -12,7 +13,7 @@ class MajorCloneApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Major Cineplex Clone',
       theme: ThemeData.dark(),
-      home: HomeScreen(),
+      home: MoviesScreen(),
     );
   }
 }
