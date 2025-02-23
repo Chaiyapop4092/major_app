@@ -33,15 +33,24 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Map<String, dynamic>> movies = [
     {'poster': 'assets/images/movie1.jpg', 'title': 'Den of Thieves', 'date': '20 Feb 2025', 'genres': ['Crime', 'Drama']},
     {'poster': 'assets/images/movie2.jpg', 'title': 'Legends of the City', 'date': '20 Feb 2025', 'genres': ['Drama', 'Action']},
+    {'poster': 'assets/images/movie3.jpg', 'title': 'Happy Mondays', 'date': '20 Feb 2025', 'genres': ['Comedy', 'Romance']},
+    {'poster': 'assets/images/movie4.jpg', 'title': 'Cleaner', 'date': '20 Feb 2025', 'genres': ['Drama', 'Action']},
+    {'poster': 'assets/images/movie5.jpg', 'title': 'Captain America Brave New World', 'date': '20 Feb 2025', 'genres': ['Action', 'Adventure']},
+    {'poster': 'assets/images/movie6.jpg', 'title': 'Nosferatu', 'date': '20 Feb 2025', 'genres': ['Drama', 'Horror']},
+    {'poster': 'assets/images/movie7.jpg', 'title': 'Attack on Titan: The Last Attack', 'date': '20 Feb 2025', 'genres': ['Drama', 'Action']},
   ];
 
   final List<Map<String, String>> discounts = [
-    {'image': 'assets/images/discount1.jpg', 'title': 'Discount 50 THB', 'validity': 'Valid until 26 Feb 2025'}
+    {'image': 'assets/images/discount1.jpg', 'title': 'Discount 50 THB', 'validity': 'Valid until 26 Feb 2025'},
+    {'image': 'assets/images/discount2.jpg', 'title': 'Discount 100 THB', 'validity': 'Valid until 26 Feb 2025'},
+    {'image': 'assets/images/discount3.jpg', 'title': 'Discount 69 THB', 'validity': 'Valid until 26 Feb 2025'},
   ];
 
   final List<Map<String, dynamic>> comingSoon = [
     {'poster': 'assets/images/coming1.jpg', 'title': 'Eternal Bond', 'date': '27 Feb 2025', 'genres': ['Thriller']},
     {'poster': 'assets/images/coming2.jpg', 'title': 'Mobile Suit Gundam', 'date': '27 Feb 2025', 'genres': ['Drama', 'Action']},
+    {'poster': 'assets/images/coming3.jpg', 'title': 'The Brutalist', 'date': '27 Feb 2025', 'genres': ['Drama']},
+    {'poster': 'assets/images/coming4.jpg', 'title': 'The Monkey', 'date': '27 Feb 2025', 'genres': ['Horror']},
   ];
 
   final List<Map<String, String>> technologies = [
