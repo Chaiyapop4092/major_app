@@ -18,18 +18,7 @@ class _CinemasScreenState extends State<CinemasScreen> {
         title: Text('Cinemas', style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
         elevation: 0,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
-        selectedItemColor: Colors.amber,
-        unselectedItemColor: Colors.white,
-        currentIndex: 1,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.location_on), label: 'Cinemas'),
-          BottomNavigationBarItem(icon: Icon(Icons.card_giftcard), label: 'Gifts'),
-          BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'Menu'),
-        ],
-      ),
+      
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

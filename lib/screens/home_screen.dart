@@ -138,69 +138,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
       ),
-      bottomNavigationBar: ClipRRect(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: Colors.grey[800],  // Dark grey background
-          selectedItemColor: Color(0xFFFFC107), // Custom subtle yellow color
-          unselectedItemColor: Colors.grey,  // Grey for unselected items
-          showUnselectedLabels: false,  // Hide label for unselected icons
-          selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),  // Bold label for selected tab
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-              backgroundColor: Colors.transparent,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.movie),
-              label: 'Movies',
-              backgroundColor: Colors.transparent,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.location_on),
-              label: 'Cinemas',
-              backgroundColor: Colors.transparent,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.discount),
-              label: 'Discount',
-              backgroundColor: Colors.transparent,
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.more_horiz),
-              label: 'More',
-              backgroundColor: Colors.transparent,
-            ),
-          ],
-          onTap: (index) {
-            // Handle tab selection
-            switch (index) {
-              case 0:
-                // Navigate to Home
-                break;
-              case 1:
-                // Navigate to Movies
-                break;
-              case 2:
-                // Navigate to Cinemas
-                break;
-              case 3:
-                // Navigate to Discount
-                break;
-              case 4:
-                // Navigate to More
-                break;
-              default:
-                break;
-            }
-          },
-        ),
-      ),
+      
     );
   }
 

@@ -10,17 +10,7 @@ class MoreScreen extends StatelessWidget {
         title: Image.asset('assets/logo.png', height: 50),
         centerTitle: true,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: Colors.black,
-        selectedItemColor: Colors.amber,
-        unselectedItemColor: Colors.white,
-        items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-          BottomNavigationBarItem(icon: Icon(Icons.movie), label: 'Movies'),
-          BottomNavigationBarItem(icon: Icon(Icons.card_giftcard), label: 'Discount'),
-          BottomNavigationBarItem(icon: Icon(Icons.menu), label: 'More'),
-        ],
-      ),
+      
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
