@@ -17,7 +17,7 @@ class DiscountsScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
-              child: Image.asset('assets/banner.png'),
+              child: Image.asset('assets/images/ads1.jpg'),
             ),
             SizedBox(height: 16),
             Row(
@@ -85,7 +85,7 @@ class DiscountsScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Center(
-                    child: Image.asset('assets/discount_$index.png', fit: BoxFit.cover),
+                    child: Image.asset('assets/images/payment$index.jpg', fit: BoxFit.cover),
                   ),
                 );
               },
@@ -111,7 +111,7 @@ class DiscountsScreen extends StatelessWidget {
                   return Card(
                     color: Colors.grey[900],
                     child: ListTile(
-                      leading: Image.asset('assets/offer_$index.png'),
+                      leading: Image.asset('assets/images/discount$index.jpg'),
                       title: Text('M-Coupon: Discount 50 THB', style: TextStyle(color: Colors.white)),
                     ),
                   );

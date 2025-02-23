@@ -28,6 +28,31 @@ class _MoviesScreenState extends State<MoviesScreen> {
       'genres': ['Action', 'Crime'],
       'imageUrl': 'assets/images/movie3.jpg',
     },
+    {
+      'title': 'The Batman',
+      'releaseDate': '4 Mar 2022',
+      'genres': ['Action', 'Crime'],
+      'imageUrl': 'assets/images/movie4.jpg',
+    },
+    {
+      'title': 'The Batman',
+      'releaseDate': '4 Mar 2022',
+      'genres': ['Action', 'Crime'],
+      'imageUrl': 'assets/images/movie5.jpg',
+    },
+    {
+      'title': 'The Batman',
+      'releaseDate': '4 Mar 2022',
+      'genres': ['Action', 'Crime'],
+      'imageUrl': 'assets/images/movie6.jpg',
+    },
+    {
+      'title': 'The Batman',
+      'releaseDate': '4 Mar 2022',
+      'genres': ['Action', 'Crime'],
+      'imageUrl': 'assets/images/movie7.jpg',
+    },
+    
   ];
 
   @override
