@@ -159,56 +159,77 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget movieList(List<Map<String, dynamic>> movies, {bool isComingSoon = false}) {
-    return SizedBox(
-      height: 220,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: movies.length,
-        itemBuilder: (context, index) {
-          final movie = movies[index];
-          return Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(movie['poster'], width: 100, height: 150, fit: BoxFit.cover),
+  return SizedBox(
+    height: 220,
+    child: ListView.builder(
+      scrollDirection: Axis.horizontal,
+      physics: BouncingScrollPhysics(), // Ensures smooth scrolling
+      itemCount: movies.length,
+      itemBuilder: (context, index) {
+        final movie = movies[index];
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.asset(movie['poster'], width: 100, height: 150, fit: BoxFit.cover),
+              ),
+              SizedBox(height: 5),
+              SizedBox(
+                width: 100, // Prevents overflow
+                child: Text(
+                  movie['title'],
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  overflow: TextOverflow.ellipsis, // Ensures text truncation
+                  maxLines: 1,
                 ),
-                SizedBox(height: 5),
-                Text(movie['title'], style: TextStyle(fontWeight: FontWeight.bold)),
-                Text(movie['date'], style: TextStyle(color: Colors.grey)),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
+              ),
+              Text(movie['date'], style: TextStyle(color: Colors.grey, fontSize: 12)),
+            ],
+          ),
+        );
+      },
+    ),
+  );
+}
+
+
 
   Widget discountList(List<Map<String, String>> discounts) {
-    return SizedBox(
-      height: 140,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: discounts.length,
-        itemBuilder: (context, index) {
-          final discount = discounts[index];
+  return SizedBox(
+    height: 140,
+    child: SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      physics: PageScrollPhysics(), // Smooth scrolling
+      child: Row(
+        children: discounts.map((discount) {
           return Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0),
             child: Column(
               children: [
                 Image.asset(discount['image']!, width: 100, height: 80, fit: BoxFit.cover),
                 SizedBox(height: 5),
-                Text(discount['title']!),
+                SizedBox(
+                  width: 100, // Limit width
+                  child: Text(
+                    discount['title']!,
+                    overflow: TextOverflow.ellipsis, // Prevent long text overflow
+                    maxLines: 1,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
                 Text(discount['validity']!, style: TextStyle(color: Colors.grey, fontSize: 10)),
               ],
             ),
           );
-        },
+        }).toList(),
       ),
-    );
-  }
+    ),
+  );
+}
+
 
   Widget technologyGrid(List<Map<String, String>> technologies) {
     return Padding(
