@@ -3,6 +3,7 @@ import 'package:major_app/screens/cinemas_screen.dart';
 import 'package:major_app/screens/discount_screen.dart';
 import 'package:major_app/screens/home_screen.dart';
 import 'package:major_app/screens/more_screen.dart';
+import 'package:major_app/screens/movie_detail_screen.dart';
 import 'package:major_app/screens/movies_screen.dart';
 
 void main() {
@@ -16,7 +17,7 @@ class MajorCloneApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Major Cineplex Clone',
       theme: ThemeData.dark(),
-      home: MainScreen(),
+      home: MovieDetailScreen(),
     );
   }
 }
