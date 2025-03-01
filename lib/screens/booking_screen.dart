@@ -180,23 +180,25 @@ class _BookingScreenState extends State<BookingScreen> {
                             bool isSelected = selectedSeats.contains(seatKey);
                             bool isBooked = bookedSeats.contains(seatKey);
 
-                            Color seatColor = isBooked
-                                ? Colors.grey
-                                : isSelected
-                                    ? Colors.amber
-                                    : seatType == 'Normal'
-                                        ? Colors.red
-                                        : seatType == 'Premium'
-                                            ? Colors.blue
-                                            : Colors.orange;
-
                             return GestureDetector(
                               onTap: () => toggleSeatSelection(row, col),
                               child: Padding(
                                 padding: const EdgeInsets.all(3.0),
                                 child: Icon(
-                                  Icons.event_seat,
-                                  color: seatColor,
+                                  isBooked
+                                      ? Icons.event_seat
+                                      : isSelected
+                                          ? Icons.check_circle
+                                          : Icons.event_seat,
+                                  color: isBooked
+                                      ? Colors.grey
+                                      : isSelected
+                                          ? Colors.green
+                                          : seatType == 'Normal'
+                                              ? Colors.red
+                                              : seatType == 'Premium'
+                                                  ? Colors.blue
+                                                  : Colors.orange,
                                   size: 32,
                                 ),
                               ),
@@ -211,25 +213,116 @@ class _BookingScreenState extends State<BookingScreen> {
                   SizedBox(height: 20),
 
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      _buildSeatTypeIndicator(Colors.red, "Normal", 280),
-                      _buildSeatTypeIndicator(Colors.blue, "Premium", 310),
-                      _buildSeatTypeIndicator(Colors.orange, "Opera Chair", 800),
-                    ],
-                  ),
+  mainAxisAlignment: MainAxisAlignment.spaceAround,
+  children: [
+    _buildSeatTypeIndicator(Colors.red, Icons.event_seat, "Normal", 280),
+    _buildSeatTypeIndicator(Colors.blue, Icons.event_seat, "Premium", 310),
+    _buildSeatTypeIndicator(Colors.orange, Icons.weekend, "Opera Chair", 800),
+  ],
+),
+
+
+
+
+
                   SizedBox(height: 20),
 
-                  Center(
-                    child: ElevatedButton(
-                      onPressed: selectedSeats.isNotEmpty ? () {} : null,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.amber,
-                        padding: EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                      ),
-                      child: Text("Book Now", style: TextStyle(fontSize: 18, color: Colors.black)),
-                    ),
-                  ),
+                  SizedBox(height: 20),
+
+Container(
+  padding: EdgeInsets.all(16),
+  decoration: BoxDecoration(
+    color: Colors.grey[900],
+    borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+  ),
+  child: Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text("Selected Seats", style: TextStyle(color: Colors.white, fontSize: 16)),
+          Text("Total", style: TextStyle(color: Colors.white, fontSize: 16)),
+        ],
+      ),
+      SizedBox(height: 4),
+      Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            selectedSeats.map((s) {
+              List<String> parts = s.split('-');
+              String rowLabel = rowLabels[int.parse(parts[0])];
+              return "$rowLabel${int.parse(parts[1]) + 1}";
+            }).join(', '),
+            style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            "฿${getTotalPrice().toStringAsFixed(2)}",
+            style: TextStyle(color: Colors.amber, fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+      SizedBox(height: 16),
+
+      // Input Field
+      TextField(
+        style: TextStyle(color: Colors.white),
+        keyboardType: TextInputType.phone,
+        decoration: InputDecoration(
+          hintText: "Mobile Number",
+          hintStyle: TextStyle(color: Colors.grey),
+          filled: true,
+          fillColor: Colors.black,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey[800]!),
+          ),
+        ),
+      ),
+      SizedBox(height: 16),
+
+      // Continue Button
+      ElevatedButton(
+        onPressed: selectedSeats.isNotEmpty ? () {} : null,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: selectedSeats.isNotEmpty ? Colors.amber : Colors.grey[800],
+          padding: EdgeInsets.symmetric(vertical: 14),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        ),
+        child: Center(
+          child: Text(
+            "Continue",
+            style: TextStyle(fontSize: 16, color: selectedSeats.isNotEmpty ? Colors.black : Colors.grey),
+          ),
+        ),
+      ),
+
+      SizedBox(height: 12),
+
+      // Terms and Privacy
+      RichText(
+        textAlign: TextAlign.center,
+        text: TextSpan(
+          style: TextStyle(color: Colors.white, fontSize: 12),
+          children: [
+            TextSpan(text: "By continuing, you agree to our "),
+            TextSpan(
+              text: "Terms of Service",
+              style: TextStyle(color: Colors.amber, fontWeight: FontWeight.bold),
+            ),
+            TextSpan(text: " and "),
+            TextSpan(
+              text: "Privacy Policy",
+              style: TextStyle(color: Colors.amber, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ),
+    ],
+  ),
+),
+
                 ],
               ),
             ),
@@ -239,14 +332,30 @@ class _BookingScreenState extends State<BookingScreen> {
     );
   }
 
-  Widget _buildSeatTypeIndicator(Color color, String type, int price) {
-    return Column(
+  
+
+Widget _buildSeatTypeIndicator(Color borderColor, IconData icon, String type, int price) {
+  return Container(
+    width: 110,
+    padding: EdgeInsets.symmetric(vertical: 12),
+    decoration: BoxDecoration(
+      color: Colors.black,
+      borderRadius: BorderRadius.circular(12),
+      border: Border.all(color: borderColor, width: 2),
+    ),
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Icon(Icons.event_seat, color: color, size: 32),
+        Icon(icon, color: borderColor, size: 32),
+        SizedBox(height: 8),
+        Text(type, style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
         SizedBox(height: 4),
-        Text(type, style: TextStyle(color: Colors.white, fontSize: 14)),
-        Text("฿$price", style: TextStyle(color: Colors.white, fontSize: 14)),
+        Text("฿$price", style: TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.bold)),
       ],
-    );
-  }
+    ),
+  );
+}
+
+
+
 }
