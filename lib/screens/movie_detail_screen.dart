@@ -132,6 +132,9 @@ class _MovieScreenState extends State<MovieDetailScreen> {
                 style: TextStyle(fontSize: 16, color: Colors.grey[500]),
               ),
             ),
+
+            
+
             Divider(color: Colors.grey[800]),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 8.0),
@@ -182,6 +185,28 @@ class _MovieScreenState extends State<MovieDetailScreen> {
                 ),
               ),
             ),
+            Padding(
+  padding: const EdgeInsets.all(8.0),
+  child: TextField(
+    style: TextStyle(color: Colors.white),
+    decoration: InputDecoration(
+      hintText: 'Search a cinema',
+      hintStyle: TextStyle(color: Colors.grey),
+      filled: true,
+      fillColor: Colors.grey[900],
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(8),
+        borderSide: BorderSide.none,
+      ),
+      prefixIcon: Icon(Icons.search, color: Colors.white),
+    ),
+    onChanged: (value) {
+      setState(() {
+        //searchQuery = value.toLowerCase();
+      });
+    },
+  ),
+),
             Divider(color: Colors.grey[800]),
             Padding(
               padding: const EdgeInsets.all(8.0),
