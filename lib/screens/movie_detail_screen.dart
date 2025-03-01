@@ -1,182 +1,372 @@
 import 'package:flutter/material.dart';
-import 'package:lucide_icons/lucide_icons.dart';
+import 'package:intl/intl.dart';
+import 'package:major_app/screens/booking_screen.dart';
+
+void main() {
+  runApp(MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: MovieDetailScreen(),
+    );
+  }
+}
 
 class MovieDetailScreen extends StatefulWidget {
   @override
-  _MovieDetailScreenState createState() => _MovieDetailScreenState();
+  _MovieScreenState createState() => _MovieScreenState();
 }
 
-class _MovieDetailScreenState extends State<MovieDetailScreen> {
-  bool showBookingScreen = false;
-  String selectedCinema = '';
+class _MovieScreenState extends State<MovieDetailScreen> {
+  DateTime selectedDate = DateTime.now();
   String selectedTime = '';
-  List<String> selectedSeats = [];
-  double totalPrice = 0.0;
+  List<Map<String, dynamic>> cinemas = [
+    {
+      'name': 'ICON CINECONIC',
+      'distance': '3.43 km',
+      'theatre': 'Theatre 11',
+      'showtimes': ['11:30', '14:00', '16:30', '19:00', '21:30'],
+      'isExpanded': true,
+    },
+    {
+      'name': 'Major Cineplex Pinklao',
+      'distance': '3.59 km',
+      'isExpanded': false,
+    },
+    {
+      'name': 'Paragon Cineplex',
+      'distance': '3.73 km',
+      'isExpanded': false,
+    },
+    {
+      'name': 'Major Cineplex Supreme',
+      'distance': '4.00 km',
+      'isExpanded': false,
+    },
+  ];
 
-  void selectCinema(String cinema) {
-    setState(() {
-      selectedCinema = cinema;
-      showBookingScreen = true;
-    });
+  void navigateToSeatSelectionScreen(String cinemaName, String showtime) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SeatSelectionScreen(
+          cinemaName: cinemaName,
+          showtime: showtime,
+          selectedDate: selectedDate,
+        ),
+      ),
+    );
   }
 
-  void selectTime(String time) {
-    setState(() {
-      selectedTime = time;
-    });
+  void navigateToBookingScreen(String cinemaName, String showtime) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BookingScreen(
+          movieTitle: 'movieTitle',
+          moviePoster: 'moviePoster',
+          movieGenre: 'movieGenre',
+          movieDuration: 5,
+          cinemaName: cinemaName,
+          showtime: showtime,
+          selectedDate: selectedDate,
+        ),
+      ),
+    );
   }
-
-  void toggleSeatSelection(String seat, double price) {
-    setState(() {
-      if (selectedSeats.contains(seat)) {
-        selectedSeats.remove(seat);
-        totalPrice -= price;
-      } else {
-        selectedSeats.add(seat);
-        totalPrice += price;
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
+        title: Text('Eternal Bond'),
         backgroundColor: Colors.black,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () {
-            if (showBookingScreen) {
-              setState(() {
-                showBookingScreen = false;
-                selectedSeats.clear();
-                totalPrice = 0.0;
-              });
-            } else {
-              Navigator.pop(context);
-            }
-          },
-        ),
-      ),
-      body: AnimatedSwitcher(
-        duration: Duration(milliseconds: 300),
-        child: showBookingScreen ? buildBookingScreen() : buildMovieDetails(),
-      ),
-    );
-  }
-
-  Widget buildMovieDetails() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Expanded(
-          child: ListView(
-            children: [
-              Image.asset('assets/movie_poster.jpg', fit: BoxFit.cover),
-              Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Text(
-                  'Movie Title',
-                  style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 16.0),
-                child: Text(
-                  'Synopsis and details...',
-                  style: TextStyle(color: Colors.white70),
-                ),
-              ),
-              Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Column(
-                  children: ['Cinema 1', 'Cinema 2', 'Cinema 3'].map((cinema) {
-                    return ListTile(
-                      title: Text(cinema, style: TextStyle(color: Colors.white)),
-                      trailing: Icon(Icons.arrow_forward_ios, color: Colors.white),
-                      onTap: () => selectCinema(cinema),
-                    );
-                  }).toList(),
-                ),
-              ),
-            ],
+        actions: [
+          IconButton(
+            icon: Icon(Icons.favorite_border),
+            onPressed: () {},
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget buildBookingScreen() {
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: ['11:30', '14:10', '16:50', '19:30'].map((time) {
-              return ElevatedButton(
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all(
-                    selectedTime == time ? Colors.amber : Colors.grey[800],
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                Image.asset(
+                  'assets/eternal_bond.jpg',
+                  fit: BoxFit.cover,
+                  width: double.infinity,
+                  height: 250,
+                ),
+                Positioned(
+                  bottom: 20,
+                  left: 20,
+                  child: Text(
+                    'Eternal Bond',
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      shadows: [
+                        Shadow(
+                          offset: Offset(2, 2),
+                          blurRadius: 10,
+                          color: Colors.black.withOpacity(0.7),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-                onPressed: () => selectTime(time),
-                child: Text(time, style: TextStyle(color: Colors.white)),
-              );
-            }).toList(),
-          ),
-        ),
-        Expanded(
-          child: GridView.builder(
-            padding: EdgeInsets.all(16.0),
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 5,
-              crossAxisSpacing: 8.0,
-              mainAxisSpacing: 8.0,
+              ],
             ),
-            itemCount: 25,
-            itemBuilder: (context, index) {
-              String seat = 'C${index + 1}';
-              double price = 1200.0;
-              bool isSelected = selectedSeats.contains(seat);
-              return GestureDetector(
-                onTap: () => toggleSeatSelection(seat, price),
-                child: Container(
-                  decoration: BoxDecoration(
-                    color: isSelected ? Colors.amber : Colors.purple,
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  child: Center(
-                    child: isSelected
-                        ? Icon(Icons.check, color: Colors.black)
-                        : Icon(Icons.event_seat, color: Colors.white),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-        Container(
-          padding: EdgeInsets.all(16.0),
-          color: Colors.grey[900],
-          child: Column(
-            children: [
-              Text('Selected Seats: ${selectedSeats.join(', ')}', style: TextStyle(color: Colors.white)),
-              Text('Total: ฿${totalPrice.toStringAsFixed(2)}', style: TextStyle(color: Colors.amber, fontSize: 18, fontWeight: FontWeight.bold)),
-              SizedBox(height: 10),
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.amber),
-                onPressed: () {},
-                child: Padding(
-                  padding: EdgeInsets.symmetric(vertical: 12.0),
-                  child: Text('Continue', style: TextStyle(color: Colors.black, fontSize: 18)),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Thriller | Rate: 15 | 110 min',
+                style: TextStyle(fontSize: 16, color: Colors.grey[500]),
+              ),
+            ),
+            Divider(color: Colors.grey[800]),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0),
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: List.generate(5, (index) {
+                    DateTime date = DateTime.now().add(Duration(days: index));
+                    bool isToday = index == 0;
+                    bool isSelected = date.year == selectedDate.year && date.month == selectedDate.month && date.day == selectedDate.day;
+                    return GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          selectedDate = date;
+                        });
+                      },
+                      child: Container(
+                        margin: EdgeInsets.symmetric(horizontal: 5),
+                        padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                        decoration: BoxDecoration(
+                          color: isSelected ? Colors.amber : Colors.black,
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: Colors.grey[600]!),
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              isToday ? 'Today' : DateFormat('EEE').format(date),
+                              style: TextStyle(
+                                color: isSelected ? Colors.black : Colors.white,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                              date.day.toString(),
+                              style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                color: isSelected ? Colors.black : Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  }),
                 ),
               ),
-            ],
-          ),
+            ),
+            Divider(color: Colors.grey[800]),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Nearby',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+              ),
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: NeverScrollableScrollPhysics(),
+              itemCount: cinemas.length,
+              itemBuilder: (context, index) {
+                var cinema = cinemas[index];
+                return ExpansionTile(
+                  title: Text(
+                    cinema['name'],
+                    style: TextStyle(fontSize: 16, color: Colors.white),
+                  ),
+                  subtitle: Text(cinema['distance'], style: TextStyle(color: Colors.grey[500])),
+                  iconColor: Colors.white,
+                  collapsedIconColor: Colors.white,
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.star_border, color: Colors.amber),
+                      SizedBox(width: 10),
+                      Icon(Icons.share, color: Colors.white),
+                    ],
+                  ),
+                  children: cinema.containsKey('showtimes')
+                      ? [
+                          Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Wrap(
+                              spacing: 10,
+                              children: cinema['showtimes'].map<Widget>((time) {
+                                bool isTimeSelected = time == selectedTime;
+                                return GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      selectedTime = time;
+                                    });
+                                    // Navigate to BookingScreen when a showtime is selected
+                                    navigateToBookingScreen(cinema['name'], time);
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                                    decoration: BoxDecoration(
+                                      color: isTimeSelected ? Colors.amber : Colors.black,
+                                      borderRadius: BorderRadius.circular(20),
+                                    ),
+                                    child: Text(
+                                      time,
+                                      style: TextStyle(
+                                        color: isTimeSelected ? Colors.black : Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ]
+                      : [],
+                );
+              },
+            ),
+          ],
         ),
-      ],
+      ),
+    );
+  }
+}
+
+class SeatSelectionScreen extends StatefulWidget {
+  final String cinemaName;
+  final String showtime;
+  final DateTime selectedDate;
+
+  SeatSelectionScreen({required this.cinemaName, required this.showtime, required this.selectedDate});
+
+  @override
+  _SeatSelectionScreenState createState() => _SeatSelectionScreenState();
+}
+
+class _SeatSelectionScreenState extends State<SeatSelectionScreen> {
+  List<List<bool>> seats = List.generate(
+    5,
+    (_) => List.generate(10, (_) => false),
+  ); // 5 rows, 10 columns
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Select Seats'),
+        backgroundColor: Colors.black,
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Text(
+              'Cinema: ${widget.cinemaName}\nTime: ${widget.showtime}\nDate: ${DateFormat('dd MMM yyyy').format(widget.selectedDate)}',
+              style: TextStyle(color: Colors.white),
+            ),
+          ),
+          Expanded(
+            child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 10,
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+              ),
+              itemCount: 50, // 5 rows * 10 columns
+              itemBuilder: (context, index) {
+                int row = index ~/ 10;
+                int col = index % 10;
+                bool isSelected = seats[row][col];
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      seats[row][col] = !isSelected;
+                    });
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: isSelected ? Colors.amber : Colors.grey[700],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Center(
+                      child: Text(
+                        '${row + 1}-${col + 1}',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton(
+              onPressed: () {
+                int selectedSeatsCount = seats.fold<int>(
+                  0,
+                  (count, row) => count + row.where((seat) => seat).length,
+                );
+                if (selectedSeatsCount > 0) {
+                  // Proceed to checkout or confirmation screen
+                  showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: Text('Seats Selected'),
+                      content: Text('You have selected $selectedSeatsCount seats.'),
+                      actions: [
+                        TextButton(
+                          onPressed: () {
+                            Navigator.pop(context);
+                            // Proceed to checkout or confirm booking
+                          },
+                          child: Text('Confirm'),
+                        ),
+                      ],
+                    ),
+                  );
+                } else {
+                  // Show message to select seats
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Please select at least one seat.')),
+                  );
+                }
+              },
+              child: Text('Proceed to Checkout'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.amber,
+                padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
