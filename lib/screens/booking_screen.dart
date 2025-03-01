@@ -1,17 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 class BookingScreen extends StatefulWidget {
   final String movieTitle;
-  final String moviePoster;
-  final String movieGenre;
-  final int movieDuration;
+  final String genre;
+  final String duration;
+  final String cinemaName;
+  final String theatre;
+  final List<String> languages;
+  final String rating;
+  final String technology;
+  final String date;
+  final List<String> showTimes;
+  String selectedTime;
 
   BookingScreen({
     required this.movieTitle,
-    required this.moviePoster,
-    required this.movieGenre,
-    required this.movieDuration, required String cinemaName, required String showtime, required DateTime selectedDate,
+    required this.genre,
+    required this.duration,
+    required this.cinemaName,
+    required this.theatre,
+    required this.languages,
+    required this.rating,
+    required this.technology,
+    required this.date,
+    required this.showTimes,
+    required this.selectedTime,
   });
 
   @override
@@ -19,238 +32,230 @@ class BookingScreen extends StatefulWidget {
 }
 
 class _BookingScreenState extends State<BookingScreen> {
-  DateTime selectedDate = DateTime.now();
-  String selectedTime = '';
-  List<List<bool>> seats = List.generate(
-    5,
-    (_) => List.generate(10, (_) => false),
-  ); // 5 แถว, 10 คอลัมน์
+  List<String> selectedSeats = [];
+  List<String> bookedSeats = ['2-3', '2-4', '2-5', '5-7', '5-8']; // ตัวอย่างที่นั่งถูกจอง
+
+  Map<String, int> seatPrices = {
+    'Normal': 280,
+    'Premium': 310,
+    'Opera': 800,
+  };
+
+  List<List<String>> seats = [
+    List.filled(10, 'Normal'),
+    List.filled(10, 'Normal'),
+    List.filled(10, 'Normal'),
+    List.filled(10, 'Normal'),
+    List.filled(10, 'Premium'),
+    List.filled(10, 'Premium'),
+    List.filled(10, 'Premium'),
+    List.filled(10, 'Opera'),
+  ];
+
+  void toggleSeatSelection(int row, int col) {
+    String seatKey = '$row-$col';
+    if (bookedSeats.contains(seatKey)) return; // ห้ามเลือกที่จองแล้ว
+
+    setState(() {
+      if (selectedSeats.contains(seatKey)) {
+        selectedSeats.remove(seatKey);
+      } else {
+        selectedSeats.add(seatKey);
+      }
+    });
+  }
+
+  int getTotalPrice() {
+    int total = 0;
+    for (String seat in selectedSeats) {
+      List<String> parts = seat.split('-');
+      int row = int.parse(parts[0]);
+      int col = int.parse(parts[1]);
+      total += seatPrices[seats[row][col]]!;
+    }
+    return total;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text('Booking - ${widget.movieTitle}'),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.pop(context),
+        ),
       ),
+      extendBodyBehindAppBar: true,
       body: SingleChildScrollView(
+        physics: BouncingScrollPhysics(),
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // แสดงรายละเอียดภาพยนตร์
-            Container(
-              padding: EdgeInsets.all(16.0),
-              color: Colors.black,
-              child: Row(
-                children: [
-                  Image.asset(
-                    widget.moviePoster,
-                    width: 100,
-                    height: 150,
-                    fit: BoxFit.cover,
+            Stack(
+              children: [
+                Container(
+                  width: double.infinity,
+                  height: 400,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage('assets/movie_poster.jpg'),
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                  SizedBox(width: 16.0),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                ),
+                Container(
+                  height: 400,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [Colors.black.withOpacity(0), Colors.black],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Padding(
+              padding: EdgeInsets.all(16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(widget.movieTitle,
+                      style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white)),
+                  SizedBox(height: 4),
+                  Text('${widget.genre} • ${widget.duration}',
+                      style: TextStyle(fontSize: 16, color: Colors.grey)),
+                  SizedBox(height: 12),
+
+                  // 📍 Theatre Information
+                  Padding(
+                    padding: EdgeInsets.symmetric(vertical: 8),
+                    child: Row(
+                      children: [
+                        Text(
+                          'Theatre ${widget.theatre}',
+                          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.white),
+                        ),
+                        SizedBox(width: 8),
+                        Icon(Icons.volume_up, color: Colors.white, size: 18),
+                        SizedBox(width: 4),
+                        ...widget.languages.map((lang) => Padding(
+                              padding: EdgeInsets.only(left: 4),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                                child: Text(lang, style: TextStyle(color: Colors.white, fontSize: 14)),
+                              ),
+                            )),
+                      ],
+                    ),
+                  ),
+
+                  // 🎟️ Rating & Technology Labels
+                  Row(
                     children: [
-                      Text(
-                        widget.movieTitle,
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          widget.rating,
+                          style: TextStyle(fontSize: 14, color: Colors.white),
                         ),
                       ),
+                      SizedBox(width: 8),
                       Text(
-                        '${widget.movieGenre} | ${widget.movieDuration} min',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey[500],
-                        ),
+                        widget.technology,
+                        style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                     ],
                   ),
-                ],
-              ),
-            ),
-            Divider(color: Colors.grey[800]),
-            // เลือกวันที่
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Select Date',
-                style: TextStyle(fontSize: 18, color: Colors.white),
-              ),
-            ),
-            // ปฏิทินเลือกวันที่
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: GestureDetector(
-                onTap: () async {
-                  DateTime? pickedDate = await showDatePicker(
-                    context: context,
-                    initialDate: selectedDate,
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime.now().add(Duration(days: 30)),
-                  );
-                  if (pickedDate != null && pickedDate != selectedDate)
-                    setState(() {
-                      selectedDate = pickedDate;
-                    });
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.grey[600]!),
-                  ),
-                  child: Text(
-                    DateFormat('EEEE, MMM d, yyyy').format(selectedDate),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Divider(color: Colors.grey[800]),
-            // เลือกเวลา
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Select Time',
-                style: TextStyle(fontSize: 18, color: Colors.white),
-              ),
-            ),
-            // ตัวเลือกเวลาฉาย
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: Wrap(
-                spacing: 10,
-                children: ['11:30', '14:00', '16:30', '19:00', '21:30']
-                    .map((time) {
-                  bool isSelected = time == selectedTime;
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        selectedTime = time;
-                      });
-                    },
-                    child: Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: 15, vertical: 5),
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? Colors.amber
-                            : Colors.black,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Text(
-                        time,
-                        style: TextStyle(
-                          color: isSelected
-                              ? Colors.black
-                              : Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  );
-                }).toList(),
-              ),
-            ),
-            Divider(color: Colors.grey[800]),
-            // เลือกที่นั่ง
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Select Seats',
-                style: TextStyle(fontSize: 18, color: Colors.white),
-              ),
-            ),
-            // แผนที่ที่นั่ง
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: GridView.builder(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                gridDelegate:
-                    SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 10,
-                  crossAxisSpacing: 10,
-                  mainAxisSpacing: 10,
-                ),
-                itemCount: 50, // 5 แถว * 10 คอลัมน์
-                itemBuilder: (context, index) {
-                  int row = index ~/ 10;
-                  int col = index % 10;
-                  bool isSelected = seats[row][col];
-                  return GestureDetector(
-                    onTap: () {
-                      setState(() {
-                        seats[row][col] = !isSelected;
-                      });
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: isSelected
-                            ? Colors.amber
-                            : Colors.grey[700],
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Center(
-                        child: Text(
-                          '${row + 1}-${col + 1}',
-                          style: TextStyle(color: Colors.white),
-                        ),
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
-            Divider(color: Colors.grey[800]),
-            // ปุ่มยืนยันการจอง
-            Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: ElevatedButton(
-                onPressed: () {
-                  int selectedSeatsCount = seats.fold<int>(
-                    0,
-                    (count, row) => count + row.where((seat) => seat).length,
-                  );
-                  if (selectedSeatsCount > 0) {
-                    // Proceed to checkout or confirmation screen
-                    showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                        title: Text('Seats Selected'),
-                        content: Text(
-                            'You have selected $selectedSeatsCount seats.'),
-                        actions: [
-                          TextButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              // Proceed to checkout or confirm booking
-                            },
-                            child: Text('Confirm'),
+                  SizedBox(height: 16),
+
+                  // 📅 วันที่
+                  Text(widget.date, style: TextStyle(fontSize: 16, color: Colors.white)),
+                  SizedBox(height: 12),
+
+                  // ⏰ เลือกเวลาฉาย
+                  Row(
+                    children: widget.showTimes.map((time) {
+                      bool isSelected = time == widget.selectedTime;
+                      return Padding(
+                        padding: EdgeInsets.only(right: 8),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              widget.selectedTime = time; // อัปเดตเวลาที่เลือก
+                            });
+                          },
+                          child: Container(
+                            padding: EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: isSelected ? Colors.amber : Colors.white),
+                              borderRadius: BorderRadius.circular(8),
+                              color: isSelected ? Colors.amber : Colors.transparent,
+                            ),
+                            child: Text(
+                              time,
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: isSelected ? Colors.black : Colors.white,
+                              ),
+                            ),
                           ),
-                        ],
-                      ),
-                    );
-                  } else {
-                    // Show message to select seats
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Please select at least one seat.')),
-                    );
-                  }
-                },
-                child: Text('Proceed to Checkout'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.amber,
-                  padding: EdgeInsets.symmetric(horizontal: 40, vertical: 10),
-                ),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                  SizedBox(height: 16),
+
+                  // 🪑 Seat Layout
+                  Center(child: Text("SCREEN", style: TextStyle(color: Colors.white, fontSize: 18))),
+                  SizedBox(height: 10),
+
+                  GridView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(),
+                    itemCount: seats.length * seats[0].length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: seats[0].length,
+                      childAspectRatio: 1.0,
+                    ),
+                    itemBuilder: (context, index) {
+                      int row = index ~/ seats[0].length;
+                      int col = index % seats[0].length;
+                      String seatType = seats[row][col];
+                      String seatKey = '$row-$col';
+
+                      bool isSelected = selectedSeats.contains(seatKey);
+                      bool isBooked = bookedSeats.contains(seatKey);
+
+                      Color seatColor = isBooked
+                          ? Colors.grey
+                          : isSelected
+                              ? Colors.amber
+                              : seatType == 'Normal'
+                                  ? Colors.red
+                                  : seatType == 'Premium'
+                                      ? Colors.blue
+                                      : Colors.orange;
+
+                      return GestureDetector(
+                        onTap: () => toggleSeatSelection(row, col),
+                        child: Icon(Icons.event_seat, color: seatColor, size: 32),
+                      );
+                    },
+                  ),
+                  SizedBox(height: 20),
+                ],
               ),
             ),
           ],
@@ -259,4 +264,3 @@ class _BookingScreenState extends State<BookingScreen> {
     );
   }
 }
- 
