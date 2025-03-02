@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:major_app/screens/cinema.screen.dart'; // นำเข้าไฟล์หน้า CinemaScreen
 
-class CinemasScreen extends StatefulWidget {
+class CinemasListScreen extends StatefulWidget {
   @override
   _CinemasScreenState createState() => _CinemasScreenState();
 }
 
-class _CinemasScreenState extends State<CinemasScreen> {
+class _CinemasScreenState extends State<CinemasListScreen> {
   int selectedIndex = 0;
   final List<String> tabs = ['All Cinemas', 'Favourites', 'Recents'];
 
@@ -111,6 +112,20 @@ class _CinemasScreenState extends State<CinemasScreen> {
           Icon(Icons.share, color: Colors.grey),
         ],
       ),
+      // ✅ เพิ่ม GestureDetector ให้สามารถกดไปหน้า CinemaScreen ได้
+      onTap: () {
+        Navigator.push(
+  context,
+  MaterialPageRoute(
+    builder: (context) => CinemaScreen(
+      cinemaName: name, 
+      cinemaImage: "URL ของรูปโรงหนัง", // แทนที่ด้วย URL ของภาพโรงหนัง
+      location: "ที่อยู่ของโรงหนัง", // แทนที่ด้วยที่อยู่จริงของโรงหนัง
+    ),
+  ),
+);
+
+      },
     );
   }
 }
