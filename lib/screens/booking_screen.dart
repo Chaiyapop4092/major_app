@@ -164,52 +164,68 @@ class _BookingScreenState extends State<BookingScreen> {
 
                   // 🪑 Seat Layout with Row Labels
                   ListView.builder(
-                    shrinkWrap: true,
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount: seats.length,
-                    itemBuilder: (context, row) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(rowLabels[row], style: TextStyle(color: Colors.white, fontSize: 16)),
-                          SizedBox(width: 8),
-                          ...List.generate(seats[row].length, (col) {
-                            String seatType = seats[row][col];
-                            String seatKey = '$row-$col';
+  shrinkWrap: true,
+  physics: NeverScrollableScrollPhysics(),
+  itemCount: seats.length,
+  itemBuilder: (context, row) {
+    return Center(
+      child: SizedBox(
+        width: MediaQuery.of(context).size.width > 600 ? 600 : double.infinity, // จำกัดขนาด
+        child: Column(
+          children: [
+            Text(rowLabels[row], style: TextStyle(color: Colors.white, fontSize: 16)),
+            SizedBox(height: 4),
+            GridView.count(
+              shrinkWrap: true,
+              crossAxisCount: seats[row].length, // 🔥 กำหนดจำนวนที่นั่งคงที่
+              crossAxisSpacing: 4,
+              mainAxisSpacing: 4,
+              childAspectRatio: 1.2, // ปรับอัตราส่วนให้พอดี
+              physics: NeverScrollableScrollPhysics(),
+              children: List.generate(seats[row].length, (col) {
+                String seatType = seats[row][col];
+                String seatKey = '$row-$col';
 
-                            bool isSelected = selectedSeats.contains(seatKey);
-                            bool isBooked = bookedSeats.contains(seatKey);
+                bool isSelected = selectedSeats.contains(seatKey);
+                bool isBooked = bookedSeats.contains(seatKey);
 
-                            return GestureDetector(
-                              onTap: () => toggleSeatSelection(row, col),
-                              child: Padding(
-                                padding: const EdgeInsets.all(3.0),
-                                child: Icon(
-                                  isBooked
-                                      ? Icons.event_seat
-                                      : isSelected
-                                          ? Icons.check_circle
-                                          : Icons.event_seat,
-                                  color: isBooked
-                                      ? Colors.grey
-                                      : isSelected
-                                          ? Colors.green
-                                          : seatType == 'Normal'
-                                              ? Colors.red
-                                              : seatType == 'Premium'
-                                                  ? Colors.blue
-                                                  : Colors.orange,
-                                  size: 32,
-                                ),
-                              ),
-                            );
-                          }),
-                          SizedBox(width: 8),
-                          Text(rowLabels[row], style: TextStyle(color: Colors.white, fontSize: 16)),
-                        ],
-                      );
-                    },
+                return GestureDetector(
+                  onTap: () => toggleSeatSelection(row, col),
+                  child: Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: Icon(
+                      isBooked
+                          ? Icons.event_seat
+                          : isSelected
+                              ? Icons.check_circle
+                              : Icons.event_seat,
+                      color: isBooked
+                          ? Colors.grey
+                          : isSelected
+                              ? Colors.green
+                              : seatType == 'Normal'
+                                  ? Colors.red
+                                  : seatType == 'Premium'
+                                      ? Colors.blue
+                                      : Colors.orange,
+                      size: 32,
+                    ),
                   ),
+                );
+              }),
+            ),
+            SizedBox(height: 4),
+          ],
+        ),
+      ),
+    );
+  },
+),
+
+
+
+
+
                   SizedBox(height: 20),
 
                   Row(
