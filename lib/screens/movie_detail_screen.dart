@@ -2,21 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:major_app/screens/booking_screen.dart';
 
-void main() {
-  runApp(MyApp());
-}
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: MovieDetailScreen(),
-    );
-  }
-}
 
 class MovieDetailScreen extends StatefulWidget {
+  @override
+  final String title;
+  final String genre;
+  final String duration;
+  final String posterPath;
+
+  const MovieDetailScreen({
+    required this.title,
+    required this.genre,
+    required this.duration,
+    required this.posterPath,
+    Key? key,
+  }) : super(key: key);
+
   @override
   _MovieScreenState createState() => _MovieScreenState();
 }
@@ -84,7 +86,7 @@ class _MovieScreenState extends State<MovieDetailScreen> {
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        title: Text('Eternal Bond'),
+        title: Text(widget.title),
         backgroundColor: Colors.black,
         actions: [
           IconButton(
@@ -100,7 +102,7 @@ class _MovieScreenState extends State<MovieDetailScreen> {
             Stack(
               children: [
                 Image.asset(
-                  'assets/eternal_bond.jpg',
+                  widget.posterPath,
                   fit: BoxFit.cover,
                   width: double.infinity,
                   height: 250,
@@ -109,7 +111,7 @@ class _MovieScreenState extends State<MovieDetailScreen> {
                   bottom: 20,
                   left: 20,
                   child: Text(
-                    'Eternal Bond',
+                    widget.title,
                     style: TextStyle(
                       fontSize: 30,
                       fontWeight: FontWeight.bold,
@@ -129,7 +131,7 @@ class _MovieScreenState extends State<MovieDetailScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                'Thriller | Rate: 15 | 110 min',
+                '${widget.genre} | ${widget.duration}',
                 style: TextStyle(fontSize: 16, color: Colors.grey[500]),
               ),
             ),
@@ -257,13 +259,12 @@ class _MovieScreenState extends State<MovieDetailScreen> {
 
                   navigateToBookingScreen(
 
-  context, 
-  'Eternal Bond', 
+context, 
+  widget.title, // ใช้ค่าจาก Constructor
   cinema['name'],
   time,
   cinema['theatre'], 
-  formattedDate, // ✅ แก้ให้ส่งค่าวันที่ไปด้วย
-
+  formattedDate, 
 
 );
                 },

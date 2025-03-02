@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:major_app/screens/movie_detail_screen.dart';
 
 void main() {
   runApp(MajorCloneApp());
@@ -98,23 +99,45 @@ class _HomeScreenState extends State<HomeScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               CarouselSlider(
-                options: CarouselOptions(
-                  autoPlay: true,
-                  height: 200,
-                  enlargeCenterPage: true,
-                  onPageChanged: (index, reason) {
-                    setState(() {
-                      _currentIndex = index;
-                    });
-                  },
-                ),
-                items: movieBanners.map((url) {
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.asset(url, fit: BoxFit.cover),
-                  );
-                }).toList(),
+  options: CarouselOptions(
+    autoPlay: true,
+    height: 200,
+    enlargeCenterPage: true,
+    onPageChanged: (index, reason) {
+      setState(() {
+        _currentIndex = index;
+      });
+    },
+  ),
+  items: movieBanners.asMap().entries.map((entry) {
+    int index = entry.key;
+    String url = entry.value;
+    
+    return GestureDetector(
+      onTap: () {
+        if (index < movies.length) {
+          final movie = movies[index]; // หาหนังที่ตรงกับ banner นี้
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => MovieDetailScreen(
+                title: movie['title'],
+                genre: movie['genres'].join(', '),
+                duration: movie['date'],
+                posterPath: movie['poster'],
               ),
+            ),
+          );
+        }
+      },
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Image.asset(url, fit: BoxFit.cover),
+      ),
+    );
+  }).toList(),
+),
+
               SizedBox(height: 10),
               // Dots below the banner
               Row(
@@ -172,10 +195,27 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.asset(movie['poster'], width: 100, height: 150, fit: BoxFit.cover),
-              ),
+              GestureDetector(
+  onTap: () {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => MovieDetailScreen(
+        title: movie['title'], 
+        genre: movie['genres'].join(', '), // แปลง List<String> เป็น String
+        duration: movie['date'], // ใช้ 'date' แทน 'duration' ชั่วคราว
+        posterPath: movie['poster'],
+      ),
+    ),
+  );
+},
+
+  child: ClipRRect(
+    borderRadius: BorderRadius.circular(10),
+    child: Image.asset(movie['poster'], width: 100, height: 150, fit: BoxFit.cover),
+  ),
+),
+
               SizedBox(height: 5),
               SizedBox(
                 width: 100, // Prevents overflow
@@ -268,4 +308,5 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+  
 }

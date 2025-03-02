@@ -17,7 +17,7 @@ class MajorCloneApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Major Cineplex Clone',
       theme: ThemeData.dark(),
-      home: CinemasListScreen(),
+      home: MainScreen(),
     );
   }
 }
