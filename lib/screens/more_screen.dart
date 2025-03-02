@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:major_app/screens/login_screen.dart';
 
 class MoreScreen extends StatelessWidget {
   @override
@@ -29,17 +30,25 @@ class MoreScreen extends StatelessWidget {
             ),
             SizedBox(height: 16),
             ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.amber,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-                minimumSize: Size(double.infinity, 50),
-              ),
-              onPressed: () {},
-              child: Text(
-                'Login / Sign up',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
-              ),
-            ),
+  style: ElevatedButton.styleFrom(
+    backgroundColor: Colors.amber,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    minimumSize: Size(double.infinity, 50),
+  ),
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => LoginScreen(), // 👈 ไปหน้า LoginScreen
+      ),
+    );
+  },
+  child: Text(
+    'Login / Sign up',
+    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black),
+  ),
+),
+
             SizedBox(height: 16),
             _buildOption(Icons.star_border, 'Watchlist'),
             _buildOption(Icons.language, 'Language', trailing: Text('ไทย | ENG', style: TextStyle(color: Colors.amber))),

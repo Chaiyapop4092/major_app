@@ -57,15 +57,16 @@ class _MovieScreenState extends State<MovieDetailScreen> {
   String cinemaName, 
   String showtime, 
   String theatre, 
-  String date // ✅ เปลี่ยนจาก DateTime เป็น String
+  String date,
+  String posterPath,
 ) async {
   Navigator.push(
     context,
     MaterialPageRoute(
       builder: (context) => BookingScreen(
-        movieTitle: movieTitle,
-        genre: 'Thriller',
-        duration: '112 min',
+        movieTitle: widget.title,
+        genre: widget.genre,
+        duration: widget.duration,
         cinemaName: cinemaName,
         theatre: theatre,
         languages: ['TH', 'EN'],
@@ -74,6 +75,7 @@ class _MovieScreenState extends State<MovieDetailScreen> {
         date: date, // ✅ ส่งค่าวันที่ที่เป็น String
         showTimes: ['11:30', '14:00', '16:30', '19:00'], // รายการเวลาฉายทั้งหมด
         selectedTime: showtime,
+        posterPath: widget.posterPath,
       ),
     ),
   );
@@ -265,6 +267,7 @@ context,
   time,
   cinema['theatre'], 
   formattedDate, 
+  widget.posterPath,
 
 );
                 },

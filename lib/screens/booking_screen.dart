@@ -12,6 +12,7 @@ class BookingScreen extends StatefulWidget {
   final String date;
   final List<String> showTimes;
   final String selectedTime;
+  final String posterPath;
 
   BookingScreen({
     required this.movieTitle,
@@ -25,6 +26,7 @@ class BookingScreen extends StatefulWidget {
     required this.date,
     required this.showTimes,
     required this.selectedTime,
+    required this.posterPath,
   });
 
   @override
@@ -111,7 +113,7 @@ class _BookingScreenState extends State<BookingScreen> {
                   height: 400,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage('assets/movie_poster.jpg'),
+                      image: AssetImage(widget.posterPath),
                       fit: BoxFit.cover,
                     ),
                   ),
