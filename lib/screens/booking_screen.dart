@@ -168,21 +168,36 @@ class _BookingScreenState extends State<BookingScreen> {
   physics: NeverScrollableScrollPhysics(),
   itemCount: seats.length,
   itemBuilder: (context, row) {
-    return Center(
-      child: SizedBox(
-        width: MediaQuery.of(context).size.width > 600 ? 600 : double.infinity, // จำกัดขนาด
-        child: Column(
-          children: [
-            Text(rowLabels[row], style: TextStyle(color: Colors.white, fontSize: 16)),
-            SizedBox(height: 4),
-            GridView.count(
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        children: [
+          // 🔥 แถวซ้าย (ตัวอักษรแถว)
+          SizedBox(
+            width: 32, // กำหนดพื้นที่แน่นอน
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Text(
+                rowLabels[row],
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+            ),
+          ),
+          SizedBox(width: 8),
+
+          // 🔥 GridView ที่นั่ง
+          Expanded(
+            child: GridView.builder(
               shrinkWrap: true,
-              crossAxisCount: seats[row].length, // 🔥 กำหนดจำนวนที่นั่งคงที่
-              crossAxisSpacing: 4,
-              mainAxisSpacing: 4,
-              childAspectRatio: 1.2, // ปรับอัตราส่วนให้พอดี
               physics: NeverScrollableScrollPhysics(),
-              children: List.generate(seats[row].length, (col) {
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: seats[row].length, // คงที่ตามข้อมูล
+                crossAxisSpacing: 4,
+                mainAxisSpacing: 4,
+                childAspectRatio: 1.2,
+              ),
+              itemCount: seats[row].length,
+              itemBuilder: (context, col) {
                 String seatType = seats[row][col];
                 String seatKey = '$row-$col';
 
@@ -212,15 +227,30 @@ class _BookingScreenState extends State<BookingScreen> {
                     ),
                   ),
                 );
-              }),
+              },
             ),
-            SizedBox(height: 4),
-          ],
-        ),
+          ),
+
+          SizedBox(width: 8),
+
+          // 🔥 แถวขวา (ตัวอักษรแถว)
+          SizedBox(
+            width: 32, // กำหนดพื้นที่แน่นอน
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Text(
+                rowLabels[row],
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   },
 ),
+
+
 
 
 
