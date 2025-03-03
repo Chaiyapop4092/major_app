@@ -191,58 +191,75 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Widget movieList(List<Map<String, dynamic>> movies, {bool isComingSoon = false}) {
-  return SizedBox(
-    height: 220,
-    child: ListView.builder(
-      scrollDirection: Axis.horizontal,
-      physics: BouncingScrollPhysics(), // Ensures smooth scrolling
-      itemCount: movies.length,
-      itemBuilder: (context, index) {
-        final movie = movies[index];
-        return Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              GestureDetector(
-  onTap: () {
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => MovieDetailScreen(
-        title: movie['title'], 
-        genre: movie['genres'].join(', '), // แปลง List<String> เป็น String
-        duration: movie['date'], // ใช้ 'date' แทน 'duration' ชั่วคราว
-        posterPath: movie['poster'],
-      ),
-    ),
-  );
-},
+  double screenWidth = MediaQuery.of(context).size.width;
+  double posterWidth = screenWidth * 0.32; // ✅ ลดขนาดเพื่อให้ใกล้กันมากขึ้น
+  double posterHeight = posterWidth * 1.5;
 
-  child: ClipRRect(
-    borderRadius: BorderRadius.circular(10),
-    child: Image.asset(movie['poster'], width: 100, height: 150, fit: BoxFit.cover),
-  ),
-),
-
-              SizedBox(height: 5),
-              SizedBox(
-                width: 100, // Prevents overflow
-                child: Text(
-                  movie['title'],
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                  overflow: TextOverflow.ellipsis, // Ensures text truncation
-                  maxLines: 1,
-                ),
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      CarouselSlider(
+        options: CarouselOptions(
+          viewportFraction: 0.34, // ✅ ลดระยะห่าง (ยิ่งน้อย ยิ่งติดกัน)
+          enableInfiniteScroll: true,
+          height: posterHeight + 50,
+        ),
+        items: movies.map((movie) {
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 4), // ✅ ลด Padding ให้รูปติดกันมากขึ้น
+            child: GestureDetector(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MovieDetailScreen(
+                      title: movie['title'],
+                      genre: movie['genres'].join(', '),
+                      duration: movie['date'],
+                      posterPath: movie['poster'],
+                    ),
+                  ),
+                );
+              },
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(
+                      movie['poster'],
+                      width: posterWidth,
+                      height: posterHeight,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  SizedBox(height: 5),
+                  SizedBox(
+                    width: posterWidth,
+                    child: Text(
+                      movie['title'],
+                      style: TextStyle(fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  ),
+                  Text(movie['date'], style: TextStyle(color: Colors.grey, fontSize: 12)),
+                ],
               ),
-              Text(movie['date'], style: TextStyle(color: Colors.grey, fontSize: 12)),
-            ],
-          ),
-        );
-      },
-    ),
+            ),
+          );
+        }).toList(),
+      ),
+    ],
   );
 }
+
+
+
+
+
+
+
 
 
 
