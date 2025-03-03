@@ -27,29 +27,120 @@ class _MovieScreenState extends State<MovieDetailScreen> {
   DateTime selectedDate = DateTime.now();
   String selectedTime = '';
   List<Map<String, dynamic>> cinemas = [
-    {
-      'name': 'ICON CINECONIC',
-      'distance': '3.43 km',
-      'theatre': 'Theatre 11',
-      'showtimes': ['11:30', '14:00', '16:30', '19:00', '21:30'],
-      'isExpanded': true,
-    },
-    {
-      'name': 'Major Cineplex Pinklao',
-      'distance': '3.59 km',
-      'isExpanded': false,
-    },
-    {
-      'name': 'Paragon Cineplex',
-      'distance': '3.73 km',
-      'isExpanded': false,
-    },
-    {
-      'name': 'Major Cineplex Supreme',
-      'distance': '4.00 km',
-      'isExpanded': false,
-    },
-  ];
+  {
+    'name': 'ICON CINECONIC',
+    'distance': '3.43 km',
+    'theatre': 'Theatre 11',
+    'showtimes': ['11:30', '14:00', '16:30', '19:00', '21:30'],
+    'isExpanded': false,
+  },
+  {
+    'name': 'Major Cineplex Pinklao',
+    'distance': '3.59 km',
+    'theatre': 'Theatre 5',
+    'showtimes': ['10:00', '12:30', '15:00', '17:30'],
+    'isExpanded': false,
+  },
+  {
+    'name': 'Paragon Cineplex',
+    'distance': '3.73 km',
+    'theatre': 'Theatre 9',
+    'showtimes': ['11:45', '14:15', '16:45', '19:15'],
+    'isExpanded': false,
+  },
+  {
+    'name': 'Major Cineplex Supreme',
+    'distance': '4.00 km',
+    'theatre': 'Theatre 3',
+    'showtimes': ['12:00', '14:30', '17:00', '19:30'],
+    'isExpanded': false,
+  },
+  {
+    'name': 'Major Cineplex Ratchayothin',
+    'distance': '5.12 km',
+    'theatre': 'Theatre 7',
+    'showtimes': ['10:30', '13:00', '15:30', '18:00'],
+    'isExpanded': false,
+  },
+  {
+    'name': 'Major Cineplex Rangsit',
+    'distance': '25.40 km',
+    'theatre': 'Theatre 12',
+    'showtimes': ['10:00', '12:30', '15:00', '17:30', '20:00'],
+    'isExpanded': false,
+  },
+  {
+    'name': 'Major Cineplex Bangna',
+    'distance': '15.80 km',
+    'theatre': 'Theatre 8',
+    'showtimes': ['11:00', '13:30', '16:00', '18:30'],
+    'isExpanded': false,
+  },
+  {
+    'name': 'Major Cineplex Central Westgate',
+    'distance': '20.10 km',
+    'theatre': 'Theatre 6',
+    'showtimes': ['10:15', '12:45', '15:15', '17:45'],
+    'isExpanded': false,
+  },
+  {
+    'name': 'Major Cineplex Fashion Island',
+    'distance': '18.50 km',
+    'theatre': 'Theatre 4',
+    'showtimes': ['10:45', '13:15', '15:45', '18:15'],
+    'isExpanded': false,
+  },
+  {
+    'name': 'Major Cineplex Central Rama 2',
+    'distance': '22.30 km',
+    'theatre': 'Theatre 10',
+    'showtimes': ['11:15', '13:45', '16:15', '18:45'],
+    'isExpanded': false,
+  },
+  {
+    'name': 'Major Cineplex Central Chiangmai',
+    'distance': '700 km',
+    'theatre': 'Theatre 5',
+    'showtimes': ['10:30', '13:00', '15:30', '18:00'],
+    'isExpanded': false,
+  },
+  {
+    'name': 'Major Cineplex Central Hatyai',
+    'distance': '950 km',
+    'theatre': 'Theatre 9',
+    'showtimes': ['11:00', '13:30', '16:00', '18:30'],
+    'isExpanded': false,
+  },
+  {
+    'name': 'Major Cineplex Udon Thani',
+    'distance': '550 km',
+    'theatre': 'Theatre 7',
+    'showtimes': ['10:45', '13:15', '15:45', '18:15'],
+    'isExpanded': false,
+  },
+  {
+    'name': 'Major Cineplex Korat',
+    'distance': '260 km',
+    'theatre': 'Theatre 3',
+    'showtimes': ['11:15', '13:45', '16:15', '18:45'],
+    'isExpanded': false,
+  },
+  {
+    'name': 'Major Cineplex Central Pattaya',
+    'distance': '140 km',
+    'theatre': 'Theatre 11',
+    'showtimes': ['10:30', '13:00', '15:30', '18:00'],
+    'isExpanded': false,
+  },
+  {
+    'name': 'Major Cineplex Central Ubon Ratchathani',
+    'distance': '615 km',
+    'theatre': 'Theatre 6',
+    'showtimes': ['10:00', '12:30', '15:00', '17:30'],
+    'isExpanded': false,
+  },
+];
+
 
   Future<void> navigateToBookingScreen(
   BuildContext context, 
