@@ -23,12 +23,15 @@ class MajorCloneApp extends StatelessWidget {
 }
 
 class MainScreen extends StatefulWidget {
+  static _MainScreenState? of(BuildContext context) =>
+      context.findAncestorStateOfType<_MainScreenState>();
+
   @override
   _MainScreenState createState() => _MainScreenState();
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0; // Track selected tab
+  int _selectedIndex = 0;
 
   final List<Widget> _screens = [
     HomeScreen(),
@@ -37,6 +40,12 @@ class _MainScreenState extends State<MainScreen> {
     DiscountsScreen(),
     MoreScreen(),
   ];
+
+  void changeTab(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -48,43 +57,20 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: _screens[_selectedIndex],
-      bottomNavigationBar: ClipRRect(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
-        ),
-        child: BottomNavigationBar(
-          type: BottomNavigationBarType.fixed,
-          backgroundColor: Color(0xFF2B2B2B), // Dark Grey Background (Matches Major Cineplex)
-          selectedItemColor: Color(0xFFFFC107), // Gold/Yellow for selected tab
-          unselectedItemColor: Colors.grey[400], // Light Grey for unselected icons
-          showUnselectedLabels: false,
-          selectedLabelStyle: TextStyle(fontWeight: FontWeight.bold),
-          currentIndex: _selectedIndex,
-          onTap: _onItemTapped,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.movie),
-              label: 'Movies',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.location_on),
-              label: 'Cinemas',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.discount),
-              label: 'Discounts',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.more_horiz),
-              label: 'More',
-            ),
-          ],
-        ),
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Color(0xFF2B2B2B),
+        selectedItemColor: Color(0xFFFFC107),
+        unselectedItemColor: Colors.grey[400],
+        currentIndex: _selectedIndex,
+        onTap: _onItemTapped,
+        items: [
+          BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
+          BottomNavigationBarItem(icon: Icon(Icons.movie), label: 'Movies'),
+          BottomNavigationBarItem(icon: Icon(Icons.location_on), label: 'Cinemas'),
+          BottomNavigationBarItem(icon: Icon(Icons.discount), label: 'Discounts'),
+          BottomNavigationBarItem(icon: Icon(Icons.more_horiz), label: 'More'),
+        ],
       ),
     );
   }

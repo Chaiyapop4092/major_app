@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:major_app/main.dart';
+import 'package:major_app/screens/discount_screen.dart';
 import 'package:major_app/screens/movie_detail_screen.dart';
 
 void main() {
@@ -169,8 +171,9 @@ class _HomeScreenState extends State<HomeScreen> {
               SizedBox(height: 20),
               sectionTitle('Now Showing'),
               movieList(movies),
-              sectionTitle('Discounts'),
-              discountList(discounts),
+              //sectionTitle('Discounts'),
+              discountList(context, discounts),
+
               sectionTitle('Coming Soon'),
               movieList(comingSoon, isComingSoon: true),
               sectionTitle('Latest Technology'),
@@ -263,62 +266,134 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
 
-  Widget discountList(List<Map<String, String>> discounts) {
+
+
+
+
+
+
+
+Widget discountList(BuildContext context, List<Map<String, String>> discounts) {
   double screenWidth = MediaQuery.of(context).size.width;
-  double itemWidth = screenWidth * 0.3; // ปรับขนาดรูปให้สัมพันธ์กับจอ
-  double itemHeight = itemWidth * 1.2; // รักษาสัดส่วนรูป
+  double imageSize = screenWidth * 0.22;
+  double containerWidth = screenWidth * 0.85;
+  double fontSizeTitle = screenWidth * 0.04;
+  double fontSizeSub = screenWidth * 0.03;
 
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
-      CarouselSlider(
+      Padding(
+        padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.03),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "Discounts",
+              style: TextStyle(
+                fontSize: fontSizeTitle,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+            ),
+            GestureDetector(
+  onTap: () {
+    // ✅ เปลี่ยน tab ไปที่ DiscountsScreen ใน MainScreen
+    MainScreen.of(context)?.changeTab(3);
+  },
+  child: Text(
+    "View All",
+    style: TextStyle(
+      fontSize: fontSizeSub,
+      fontWeight: FontWeight.bold,
+      color: Colors.yellow,
+    ),
+  ),
+),
+
+          ],
+        ),
+      ),
+      SizedBox(height: screenWidth * 0.02),
+      CarouselSlider.builder(
         options: CarouselOptions(
-          autoPlay: false, // ปิด Auto Slide
-          enableInfiniteScroll: true, // ป้องกันการ Loop
-          viewportFraction: 0.35, // ขยาย View เพื่อให้เลื่อนสวยขึ้น
+          height: screenWidth * 0.3,
+          enableInfiniteScroll: true,
+          viewportFraction: 0.9,
           enlargeCenterPage: false,
         ),
-        items: discounts.map((discount) {
-          return Builder(
-            builder: (BuildContext context) {
-              return Padding(
-                padding: EdgeInsets.symmetric(horizontal: 6), // ลดช่องว่าง
-                child: Column(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image.asset(
-                        discount['image']!,
-                        width: itemWidth,
-                        height: itemHeight,
-                        fit: BoxFit.cover,
+        itemCount: discounts.length,
+        itemBuilder: (context, index, realIndex) {
+          final discount = discounts[index];
+          return ClipPath(
+            clipper: TicketClipper(),
+            child: Container(
+              width: containerWidth,
+              decoration: BoxDecoration(
+                color: Color(0xFF222222),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                children: [
+                  SizedBox(width: screenWidth * 0.02),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.asset(
+                      discount['image']!,
+                      width: imageSize,
+                      height: imageSize,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                  SizedBox(width: screenWidth * 0.02),
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(vertical: screenWidth * 0.02),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            "assets/images/major_logo_mini.jpg",
+                            width: screenWidth * 0.07,
+                          ),
+                          SizedBox(height: screenWidth * 0.01),
+                          Text(
+                            discount['title']!,
+                            style: TextStyle(
+                              fontSize: fontSizeTitle,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(height: screenWidth * 0.01),
+                          Text(
+                            discount['validity']!,
+                            style: TextStyle(
+                              fontSize: fontSizeSub,
+                              color: Colors.grey,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    SizedBox(height: 5),
-                    SizedBox(
-                      width: itemWidth,
-                      child: Text(
-                        discount['title']!,
-                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 1,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    Text(
-                      discount['validity']!,
-                      style: TextStyle(color: Colors.grey, fontSize: 10),
-                    ),
-                  ],
-                ),
-              );
-            },
+                  ),
+                  SizedBox(width: screenWidth * 0.02),
+                ],
+              ),
+            ),
           );
-        }).toList(),
+        },
       ),
     ],
   );
 }
+
+
+
+
+
+
 
 
 
@@ -355,4 +430,33 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
   
+}
+// CustomClipper สำหรับทำจุดเว้า
+class TicketClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    Path path = Path();
+
+    // สร้างกรอบหลักของบัตร
+    path.addRRect(RRect.fromRectAndCorners(
+      Rect.fromLTWH(0, 0, size.width, size.height),
+      topLeft: Radius.circular(15),
+      bottomLeft: Radius.circular(15),
+      topRight: Radius.circular(15),
+      bottomRight: Radius.circular(15),
+    ));
+
+    // จุดเว้าซ้าย
+    path.addOval(Rect.fromCircle(center: Offset(size.width * 0.25, 0), radius: 10));
+    path.addOval(Rect.fromCircle(center: Offset(size.width * 0.25, size.height), radius: 10));
+
+    // จุดเว้าขวา
+    path.addOval(Rect.fromCircle(center: Offset(size.width * 0.75, 0), radius: 10));
+    path.addOval(Rect.fromCircle(center: Offset(size.width * 0.75, size.height), radius: 10));
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(TicketClipper oldClipper) => false;
 }
