@@ -264,75 +264,95 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
   Widget discountList(List<Map<String, String>> discounts) {
-  return SizedBox(
-    height: 140,
-    child: SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      physics: PageScrollPhysics(), // Smooth scrolling
-      child: Row(
-        children: discounts.map((discount) {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: Column(
-              children: [
-                Image.asset(discount['image']!, width: 100, height: 80, fit: BoxFit.cover),
-                SizedBox(height: 5),
-                SizedBox(
-                  width: 100, // Limit width
-                  child: Text(
-                    discount['title']!,
-                    overflow: TextOverflow.ellipsis, // Prevent long text overflow
-                    maxLines: 1,
-                    textAlign: TextAlign.center,
-                  ),
+  double screenWidth = MediaQuery.of(context).size.width;
+  double itemWidth = screenWidth * 0.3; // ปรับขนาดรูปให้สัมพันธ์กับจอ
+  double itemHeight = itemWidth * 1.2; // รักษาสัดส่วนรูป
+
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      CarouselSlider(
+        options: CarouselOptions(
+          autoPlay: false, // ปิด Auto Slide
+          enableInfiniteScroll: true, // ป้องกันการ Loop
+          viewportFraction: 0.35, // ขยาย View เพื่อให้เลื่อนสวยขึ้น
+          enlargeCenterPage: false,
+        ),
+        items: discounts.map((discount) {
+          return Builder(
+            builder: (BuildContext context) {
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: 6), // ลดช่องว่าง
+                child: Column(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.asset(
+                        discount['image']!,
+                        width: itemWidth,
+                        height: itemHeight,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                    SizedBox(height: 5),
+                    SizedBox(
+                      width: itemWidth,
+                      child: Text(
+                        discount['title']!,
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                        overflow: TextOverflow.ellipsis,
+                        maxLines: 1,
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Text(
+                      discount['validity']!,
+                      style: TextStyle(color: Colors.grey, fontSize: 10),
+                    ),
+                  ],
                 ),
-                Text(discount['validity']!, style: TextStyle(color: Colors.grey, fontSize: 10)),
-              ],
-            ),
+              );
+            },
           );
         }).toList(),
       ),
+    ],
+  );
+}
+
+
+
+
+
+
+  Widget technologyGrid(List<Map<String, String>> technologies) {
+  double screenWidth = MediaQuery.of(context).size.width;
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 10),
+    child: GridView.builder(
+      shrinkWrap: true,
+      physics: NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: screenWidth > 600 ? 5 : 4, // ✅ ปรับจำนวนคอลัมน์ตามจอ
+        childAspectRatio: 1,
+      ),
+      itemCount: technologies.length,
+      itemBuilder: (context, index) {
+        final technology = technologies[index];
+        return ClipRRect(
+          borderRadius: BorderRadius.circular(10),
+          child: Image.asset(
+            technology['image']!,
+            width: screenWidth * 0.18, // ✅ ปรับขนาดรูปอัตโนมัติ
+            height: screenWidth * 0.18,
+            fit: BoxFit.contain,
+          ),
+        );
+      },
     ),
   );
 }
 
 
-  Widget technologyGrid(List<Map<String, String>> technologies) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      child: GridView.builder(
-        shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
-          childAspectRatio: 1,
-        ),
-        itemCount: technologies.length,
-        itemBuilder: (context, index) {
-          final technology = technologies[index];
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: Image.asset(
-                  technology['image']!,
-                  width: 60,
-                  height: 60,
-                  fit: BoxFit.contain,
-                ),
-              ),
-              SizedBox(height: 5),
-              Text(
-                technology['name']!,
-                style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          );
-        },
-      ),
-    );
-  }
   
 }
