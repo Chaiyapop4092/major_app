@@ -101,8 +101,9 @@ class _HomeScreenState extends State<HomeScreen> {
               CarouselSlider(
   options: CarouselOptions(
     autoPlay: true,
-    height: 200,
+    height: MediaQuery.of(context).size.width * 0.55, // ปรับขนาดอัตโนมัติ
     enlargeCenterPage: true,
+    viewportFraction: 0.9, // ลดช่องว่างของภาพข้างๆ
     onPageChanged: (index, reason) {
       setState(() {
         _currentIndex = index;
@@ -112,11 +113,11 @@ class _HomeScreenState extends State<HomeScreen> {
   items: movieBanners.asMap().entries.map((entry) {
     int index = entry.key;
     String url = entry.value;
-    
+
     return GestureDetector(
       onTap: () {
         if (index < movies.length) {
-          final movie = movies[index]; // หาหนังที่ตรงกับ banner นี้
+          final movie = movies[index];
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -132,11 +133,19 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: ClipRRect(
         borderRadius: BorderRadius.circular(10),
-        child: Image.asset(url, fit: BoxFit.cover),
+        child: AspectRatio(
+          aspectRatio: 16 / 9, // บังคับให้ภาพไม่ผิดสัดส่วน
+          child: Image.asset(
+            url,
+            fit: BoxFit.cover, // รูปเต็มพื้นที่โดยไม่เสียสัดส่วน
+            width: double.infinity,
+          ),
+        ),
       ),
     );
   }).toList(),
 ),
+
 
               SizedBox(height: 10),
               // Dots below the banner
