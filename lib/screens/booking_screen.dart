@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math';
 
 class BookingScreen extends StatefulWidget {
   final String movieTitle;
@@ -35,7 +36,7 @@ class BookingScreen extends StatefulWidget {
 
 class _BookingScreenState extends State<BookingScreen> {
   List<String> selectedSeats = [];
-  List<String> bookedSeats = ['6-8', '6-9', '7-4', '7-5', '8-10'];
+  List<String> bookedSeats = [];
   String selectedShowTime = '';
 
   Map<String, int> seatPrices = {
@@ -62,6 +63,24 @@ class _BookingScreenState extends State<BookingScreen> {
   void initState() {
     super.initState();
     selectedShowTime = widget.selectedTime;
+    _generateBookedSeats();
+  }
+
+  void _generateBookedSeats() {
+    final Random random = Random(widget.cinemaName.hashCode + widget.theatre.hashCode);
+    Set<String> bookedSet = {};
+    int totalSeats = seats.expand((row) => row).length;
+    int bookedCount = (totalSeats * 0.15).toInt(); // สุ่มให้ประมาณ 15% ของที่นั่งถูกจอง
+
+    while (bookedSet.length < bookedCount) {
+      int row = random.nextInt(seats.length);
+      int col = random.nextInt(seats[row].length);
+      bookedSet.add('$row-$col');
+    }
+    
+    setState(() {
+      bookedSeats = bookedSet.toList();
+    });
   }
 
   void toggleSeatSelection(int row, int col) {
