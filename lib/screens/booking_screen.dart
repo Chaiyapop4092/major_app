@@ -67,7 +67,7 @@ class _BookingScreenState extends State<BookingScreen> {
   }
 
   void _generateBookedSeats() {
-    final Random random = Random(widget.cinemaName.hashCode + widget.theatre.hashCode);
+    final Random random = Random(widget.cinemaName.hashCode + widget.theatre.hashCode + widget.selectedTime.hashCode);
     Set<String> bookedSet = {};
     int totalSeats = seats.expand((row) => row).length;
     int bookedCount = (totalSeats * 0.15).toInt(); // สุ่มให้ประมาณ 15% ของที่นั่งถูกจอง
