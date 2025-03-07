@@ -38,6 +38,7 @@ class _BookingScreenState extends State<BookingScreen> {
   List<String> selectedSeats = [];
   List<String> bookedSeats = [];
   String selectedShowTime = '';
+  
 
   Map<String, int> seatPrices = {
     'Normal': 280,
@@ -66,22 +67,28 @@ class _BookingScreenState extends State<BookingScreen> {
     _generateBookedSeats();
   }
 
-  void _generateBookedSeats() {
-    final Random random = Random(widget.cinemaName.hashCode + widget.theatre.hashCode + widget.selectedTime.hashCode);
-    Set<String> bookedSet = {};
-    int totalSeats = seats.expand((row) => row).length;
-    int bookedCount = (totalSeats * 0.15).toInt(); // สุ่มให้ประมาณ 15% ของที่นั่งถูกจอง
+ void _generateBookedSeats() {
+  final Random random = Random(widget.cinemaName.hashCode + 
+                                 widget.theatre.hashCode + 
+                                 widget.selectedTime.hashCode + 
+                                 widget.date.hashCode); // เพิ่มวันและเวลาลงในคีย์การสุ่ม
 
-    while (bookedSet.length < bookedCount) {
-      int row = random.nextInt(seats.length);
-      int col = random.nextInt(seats[row].length);
-      bookedSet.add('$row-$col');
-    }
-    
-    setState(() {
-      bookedSeats = bookedSet.toList();
-    });
+  Set<String> bookedSet = {};
+  int totalSeats = seats.expand((row) => row).length;
+  int bookedCount = (totalSeats * 0.15).toInt(); // สุ่มให้ประมาณ 15% ของที่นั่งถูกจอง
+
+  while (bookedSet.length < bookedCount) {
+    int row = random.nextInt(seats.length);
+    int col = random.nextInt(seats[row].length);
+    bookedSet.add('$row-$col');
   }
+
+  setState(() {
+    bookedSeats = bookedSet.toList();
+  });
+}
+
+  
 
   void toggleSeatSelection(int row, int col) {
     String seatKey = '$row-$col';
@@ -425,4 +432,6 @@ Widget _buildSeatTypeIndicator(Color borderColor, IconData icon, String type, in
 
 
 
+
 }
+
