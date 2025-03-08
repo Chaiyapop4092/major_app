@@ -25,7 +25,7 @@ class MovieDetailScreen extends StatefulWidget {
 
 class _MovieScreenState extends State<MovieDetailScreen> {
   DateTime selectedDate = DateTime.now();
-  String selectedTime = '';
+  String selectedTime = ''; 
   List<Map<String, dynamic>> cinemas = [
   {
     'name': 'ICON CINECONIC',
@@ -149,13 +149,14 @@ class _MovieScreenState extends State<MovieDetailScreen> {
   String showtime, 
   String theatre, 
   String date,
-  String posterPath,
+  String posterPath, 
+  Map<String, dynamic> cinema,  // เพิ่มตัวแปร cinema เพื่อรับข้อมูลโรงที่เลือก
 ) async {
   Navigator.push(
     context,
     MaterialPageRoute(
       builder: (context) => BookingScreen(
-        movieTitle: widget.title,
+        movieTitle: movieTitle,
         genre: widget.genre,
         duration: widget.duration,
         cinemaName: cinemaName,
@@ -164,13 +165,14 @@ class _MovieScreenState extends State<MovieDetailScreen> {
         rating: 'R15',
         technology: 'LASER CINEMA',
         date: date, // ✅ ส่งค่าวันที่ที่เป็น String
-        showTimes: ['11:30', '14:00', '16:30', '19:00'], // รายการเวลาฉายทั้งหมด
+        showTimes: cinema['showtimes'], // ใช้ showtimes จาก cinema ที่เลือก
         selectedTime: showtime,
-        posterPath: widget.posterPath,
+        posterPath: posterPath,
       ),
     ),
   );
 }
+
 
 
 
@@ -334,57 +336,58 @@ class _MovieScreenState extends State<MovieDetailScreen> {
         ],
       ),
       children: cinema.containsKey('showtimes')
-    ? [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Wrap(
-            spacing: 10,
-            children: cinema['showtimes'].map<Widget>((time) {
-              bool isTimeSelected = time == selectedTime;
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    selectedTime = time;
-                  });
+        ? [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Wrap(
+                spacing: 10,
+                children: cinema['showtimes'].map<Widget>((time) {
+                  bool isTimeSelected = time == selectedTime;
+                  return GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        selectedTime = time;
+                      });
 
-                  // ✅ แปลง selectedDate จาก DateTime เป็น String ก่อนส่งไป
-                  String formattedDate = DateFormat('EEE dd MMM yyyy').format(selectedDate);
+                      // แปลง selectedDate จาก DateTime เป็น String ก่อนส่งไป
+                      String formattedDate = DateFormat('EEE dd MMM yyyy').format(selectedDate);
 
-                  navigateToBookingScreen(
-
-context, 
-  widget.title, // ใช้ค่าจาก Constructor
-  cinema['name'],
-  time,
-  cinema['theatre'], 
-  formattedDate, 
-  widget.posterPath,
-
-);
-                },
-                child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: isTimeSelected ? Colors.amber : Colors.black,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Text(
-                    time,
-                    style: TextStyle(
-                      color: isTimeSelected ? Colors.black : Colors.white,
-                      fontWeight: FontWeight.bold,
+                      // ส่งข้อมูลไปยัง BookingScreen โดยใช้ค่า showtimes ของ cinema
+                      navigateToBookingScreen(
+                        context, 
+                        widget.title, // ชื่อภาพยนตร์
+                        cinema['name'], // ชื่อโรง
+                        time, // เวลาฉายที่เลือก
+                        cinema['theatre'], // โรงภาพยนตร์
+                        formattedDate, // วันที่
+                        widget.posterPath, // รูปภาพโปสเตอร์
+                        cinema, // ส่งค่า cinema ทั้งหมด
+                      );
+                    },
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: isTimeSelected ? Colors.amber : Colors.black,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Text(
+                        time,
+                        style: TextStyle(
+                          color: isTimeSelected ? Colors.black : Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-        ),
-      ]
-    : [],
+                  );
+                }).toList(),
+              ),
+            ),
+          ]
+        : [],
     );
   },
 )
+
 
           ],
         ),
