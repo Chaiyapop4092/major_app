@@ -133,6 +133,20 @@ void updateBookedSeatsForNewShowTime() {
     }
     return total;
   }
+double _calculateAspectRatio(BuildContext context) {
+  double screenWidth = MediaQuery.of(context).size.width;
+  double screenHeight = MediaQuery.of(context).size.height;
+
+  // ตั้งค่าขนาด childAspectRatio ตามขนาดหน้าจอ
+  double aspectRatio = screenWidth / screenHeight;
+
+  // ควบคุมอัตราส่วน (ตัวเลข 1.0 เป็นค่าที่นั่งสี่เหลี่ยม)
+  if (aspectRatio > 1.5) {
+    return 1.2; // หน้าจอใหญ่ (เช่น 16:9)
+  } else {
+    return 1.5; // หน้าจอเล็ก
+  }
+}
 
   @override
   Widget build(BuildContext context) {
@@ -237,49 +251,73 @@ void updateBookedSeatsForNewShowTime() {
 
           // 🔥 GridView ที่นั่ง
           Expanded(
-            child: GridView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: seats[row].length, // คงที่ตามข้อมูล
-                crossAxisSpacing: 4,
-                mainAxisSpacing: 4,
-                childAspectRatio: 1.2,
-              ),
-              itemCount: seats[row].length,
-              itemBuilder: (context, col) {
-                String seatType = seats[row][col];
-                String seatKey = '$row-$col';
+  child: LayoutBuilder(
+    builder: (context, constraints) {
+      // คำนวณขนาดของที่นั่งตามขนาดหน้าจอ
+      double seatSize = constraints.maxWidth / seats[row].length * 0.8; // เพิ่มขนาดที่นั่ง
+      seatSize = max(seatSize, 40.0);  // กำหนดขนาดขั้นต่ำของที่นั่ง
 
-                bool isSelected = selectedSeats.contains(seatKey);
-                bool isBooked = bookedSeats.contains(seatKey);
+      return GridView.builder(
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: seats[row].length, // คงที่ตามข้อมูล
+          crossAxisSpacing: 4,
+          mainAxisSpacing: 4,
+          childAspectRatio: seatSize / seatSize, // ควบคุมขนาดที่นั่ง
+        ),
+        itemCount: seats[row].length,
+        itemBuilder: (context, col) {
+          String seatType = seats[row][col];
+          String seatKey = '$row-$col';
 
-                return GestureDetector(
-                  onTap: () => toggleSeatSelection(row, col),
-                  child: Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: Icon(
-                      isBooked
-                          ? Icons.event_seat
-                          : isSelected
-                              ? Icons.check_circle
-                              : Icons.event_seat,
-                      color: isBooked
-                          ? Colors.grey
-                          : isSelected
-                              ? Colors.green
-                              : seatType == 'Normal'
-                                  ? Colors.red
-                                  : seatType == 'Premium'
-                                      ? Colors.blue
-                                      : Colors.orange,
-                      size: 32,
-                    ),
+          bool isSelected = selectedSeats.contains(seatKey);
+          bool isBooked = bookedSeats.contains(seatKey);
+
+          return GestureDetector(
+            onTap: () => toggleSeatSelection(row, col),
+            child: Padding(
+              padding: const EdgeInsets.all(2.0), // ลด padding รอบๆ ที่นั่ง
+              child: Container(
+                width: seatSize, // ขนาดของที่นั่ง
+                height: seatSize, // ขนาดของที่นั่ง
+                decoration: BoxDecoration(
+                  // กำหนดสีของที่นั่งตรงนี้แทนพื้นหลัง
+                  color: Colors.transparent, // พื้นหลังล่องหน
+                  borderRadius: BorderRadius.circular(16), // มุมโค้งมน
+                ),
+                child: Center(
+                  child: Icon(
+                    isBooked
+                        ? Icons.event_seat
+                        : isSelected
+                            ? Icons.check_circle
+                            : Icons.event_seat,
+                    color: isBooked
+                        ? Colors.grey
+                        : isSelected
+                            ? Colors.green
+                            : seatType == 'Normal'
+                                ? Colors.red
+                                : seatType == 'Premium'
+                                    ? Colors.blue
+                                    : Colors.orange,
+                    size: seatSize * 0.6, // ไอคอนปรับขนาดให้พอดีกับที่นั่ง
                   ),
-                );
-              },
+                ),
+              ),
             ),
-          ),
+          );
+        },
+      );
+    },
+  ),
+),
+
+
+
+
+
 
           SizedBox(width: 8),
 
