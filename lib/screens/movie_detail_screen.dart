@@ -26,6 +26,7 @@ class MovieDetailScreen extends StatefulWidget {
 class _MovieScreenState extends State<MovieDetailScreen> {
   DateTime selectedDate = DateTime.now();
   String selectedTime = ''; 
+  
   List<Map<String, dynamic>> cinemas = [
   {
     'name': 'ICON CINECONIC',

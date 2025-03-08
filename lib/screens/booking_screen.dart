@@ -38,6 +38,8 @@ class _BookingScreenState extends State<BookingScreen> {
   List<String> selectedSeats = [];
   List<String> bookedSeats = [];
   String selectedShowTime = '';
+  Map<String, List<String>> bookedSeatsForShowTime = {}; // เก็บที่นั่งที่จองตามรอบหนัง
+  
   
 
   Map<String, int> seatPrices = {
@@ -65,6 +67,38 @@ class _BookingScreenState extends State<BookingScreen> {
     super.initState();
     selectedShowTime = widget.selectedTime;
     _generateBookedSeats();
+    _loadBookedSeatsForShowTime(); // โหลดที่นั่งที่จองสำหรับรอบแรก
+  }
+ void _loadBookedSeatsForShowTime() {
+    // ตรวจสอบว่ามีที่นั่งที่จองแล้วสำหรับรอบนี้หรือไม่
+    if (!bookedSeatsForShowTime.containsKey(selectedShowTime)) {
+      _generateBookedSeatsForShowTime(); // ถ้าไม่มี ให้สุ่มที่นั่งที่จองใหม่
+    } else {
+      setState(() {
+        bookedSeats = bookedSeatsForShowTime[selectedShowTime]!; // โหลดที่นั่งที่จอง
+      });
+    }
+  }
+void _generateBookedSeatsForShowTime() {
+    final Random random = Random(widget.cinemaName.hashCode + 
+                                   widget.theatre.hashCode + 
+                                   selectedShowTime.hashCode + 
+                                   widget.date.hashCode); // เพิ่มวันและเวลาลงในคีย์การสุ่ม
+
+    Set<String> bookedSet = {};
+    int totalSeats = seats.expand((row) => row).length;
+    int bookedCount = (totalSeats * 0.15).toInt(); // สุ่มให้ประมาณ 15% ของที่นั่งถูกจอง
+
+    while (bookedSet.length < bookedCount) {
+      int row = random.nextInt(seats.length);
+      int col = random.nextInt(seats[row].length);
+      bookedSet.add('$row-$col');
+    }
+
+    setState(() {
+      bookedSeats = bookedSet.toList();
+      bookedSeatsForShowTime[selectedShowTime] = bookedSeats; // เก็บที่นั่งที่จองสำหรับรอบนี้
+    });
   }
 
  void _generateBookedSeats() {
@@ -87,27 +121,18 @@ class _BookingScreenState extends State<BookingScreen> {
     bookedSeats = bookedSet.toList();
   });
 }
-void updateBookedSeatsForNewShowTime() {
-  final Random random = Random(widget.cinemaName.hashCode + 
-                                 widget.theatre.hashCode + 
-                                 selectedShowTime.hashCode + 
-                                 widget.date.hashCode); // เพิ่มวันและเวลาลงในคีย์การสุ่ม
-
-  Set<String> bookedSet = {};
-  int totalSeats = seats.expand((row) => row).length;
-  int bookedCount = (totalSeats * 0.15).toInt(); // สุ่มให้ประมาณ 15% ของที่นั่งถูกจอง
-
-  while (bookedSet.length < bookedCount) {
-    int row = random.nextInt(seats.length);
-    int col = random.nextInt(seats[row].length);
-    bookedSet.add('$row-$col');
+  void updateBookedSeatsForNewShowTime() {
+    // อัปเดตที่นั่งจองสำหรับรอบใหม่
+    if (!bookedSeatsForShowTime.containsKey(selectedShowTime)) {
+      _generateBookedSeatsForShowTime();
+    } else {
+      setState(() {
+        bookedSeats = bookedSeatsForShowTime[selectedShowTime]!; // โหลดที่นั่งที่จองจากรอบนั้น
+      });
+    }
   }
 
-  setState(() {
-    bookedSeats = bookedSet.toList();
-  });
-}
-
+  
   
 
   void toggleSeatSelection(int row, int col) {
@@ -417,20 +442,61 @@ Container(
       SizedBox(height: 16),
 
       // Continue Button
-      ElevatedButton(
-        onPressed: selectedSeats.isNotEmpty ? () {} : null,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: selectedSeats.isNotEmpty ? Colors.amber : Colors.grey[800],
-          padding: EdgeInsets.symmetric(vertical: 14),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-        ),
-        child: Center(
-          child: Text(
-            "Continue",
-            style: TextStyle(fontSize: 16, color: selectedSeats.isNotEmpty ? Colors.black : Colors.grey),
+      // เมื่อกดปุ่ม Continue
+ElevatedButton(
+  onPressed: selectedSeats.isNotEmpty ? () {
+    // แสดง Dialog เมื่อเลือกที่นั่งแล้ว
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Payment Completed', style: TextStyle(color: Colors.white)),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text('Thank you for your booking!', style: TextStyle(color: Colors.white)),
+              SizedBox(height: 10),
+              Text('Your selected seats: ${selectedSeats.map((s) {
+                List<String> parts = s.split('-');
+                String rowLabel = rowLabels[int.parse(parts[0])];
+                return "$rowLabel${int.parse(parts[1]) + 1}";
+              }).join(', ')}', style: TextStyle(color: Colors.white)),
+              SizedBox(height: 10),
+              Text('Total: ฿${getTotalPrice().toStringAsFixed(2)}', style: TextStyle(color: Colors.amber, fontWeight: FontWeight.bold)),
+            ],
           ),
-        ),
-      ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                // อัปเดตที่นั่งให้ถูกจองแล้ว
+                setState(() {
+                  for (String seat in selectedSeats) {
+                    bookedSeats.add(seat); // เพิ่มที่นั่งที่เลือกเข้าไปใน bookedSeats
+                  }
+                  selectedSeats.clear(); // เคลียร์ที่นั่งที่เลือกหลังจากจ่ายเงินเสร็จ
+                });
+                Navigator.of(context).pop(); // ปิด Dialog
+              },
+              child: Text('OK', style: TextStyle(color: Colors.amber)),
+            ),
+          ],
+        );
+      },
+    );
+  } : null,
+  style: ElevatedButton.styleFrom(
+    backgroundColor: selectedSeats.isNotEmpty ? Colors.amber : Colors.grey[800],
+    padding: EdgeInsets.symmetric(vertical: 14),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+  ),
+  child: Center(
+    child: Text(
+      "Continue",
+      style: TextStyle(fontSize: 16, color: selectedSeats.isNotEmpty ? Colors.black : Colors.grey),
+    ),
+  ),
+),
+
 
       SizedBox(height: 12),
 
