@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:math';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BookingScreen extends StatefulWidget {
   final String movieTitle;
