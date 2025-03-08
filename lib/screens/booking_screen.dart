@@ -87,6 +87,26 @@ class _BookingScreenState extends State<BookingScreen> {
     bookedSeats = bookedSet.toList();
   });
 }
+void updateBookedSeatsForNewShowTime() {
+  final Random random = Random(widget.cinemaName.hashCode + 
+                                 widget.theatre.hashCode + 
+                                 selectedShowTime.hashCode + 
+                                 widget.date.hashCode); // เพิ่มวันและเวลาลงในคีย์การสุ่ม
+
+  Set<String> bookedSet = {};
+  int totalSeats = seats.expand((row) => row).length;
+  int bookedCount = (totalSeats * 0.15).toInt(); // สุ่มให้ประมาณ 15% ของที่นั่งถูกจอง
+
+  while (bookedSet.length < bookedCount) {
+    int row = random.nextInt(seats.length);
+    int col = random.nextInt(seats[row].length);
+    bookedSet.add('$row-$col');
+  }
+
+  setState(() {
+    bookedSeats = bookedSet.toList();
+  });
+}
 
   
 
@@ -175,10 +195,12 @@ class _BookingScreenState extends State<BookingScreen> {
                       bool isSelected = time == selectedShowTime;
                       return GestureDetector(
                         onTap: () {
-                          setState(() {
-                            selectedShowTime = time;
-                          });
-                        },
+  setState(() {
+    selectedShowTime = time;
+    updateBookedSeatsForNewShowTime(); // อัปเดตที่นั่งที่จองใหม่
+  });
+},
+
                         child: Chip(
                           label: Text(time, style: TextStyle(color: isSelected ? Colors.black : Colors.white)),
                           backgroundColor: isSelected ? Colors.amber : Colors.grey[800],
