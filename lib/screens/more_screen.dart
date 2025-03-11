@@ -8,8 +8,11 @@ class MoreScreen extends StatelessWidget {
       backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.black,
-        title: Image.asset('assets/logo.png', height: 50),
+        title: Image.asset('assets/images/major_logo.png', height: 80, width: 80),
+
         centerTitle: true,
+        titleSpacing: 0, // ปรับการจัดระยะของ title
+        toolbarHeight: 100, // ปรับความสูงของ AppBar
       ),
       
       body: Padding(

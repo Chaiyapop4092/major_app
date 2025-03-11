@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:major_app/screens/cinema.screen.dart'; // นำเข้าไฟล์หน้า CinemaScreen
+import 'package:major_app/screens/cinema.screen.dart';
 
 class CinemasListScreen extends StatefulWidget {
   @override
@@ -10,6 +10,25 @@ class _CinemasScreenState extends State<CinemasListScreen> {
   int selectedIndex = 0;
   final List<String> tabs = ['All Cinemas', 'Favourites', 'Recents'];
 
+  final List<Map<String, dynamic>> cinemas = [
+    {'name': 'ICON CINECONIC', 'distance': '3.43 km'},
+    {'name': 'Major Cineplex Pinklao', 'distance': '3.59 km'},
+    {'name': 'Paragon Cineplex', 'distance': '3.73 km'},
+    {'name': 'Major Cineplex Supreme', 'distance': '4.00 km'},
+    {'name': 'Major Cineplex Ratchayothin', 'distance': '5.12 km'},
+    {'name': 'Major Cineplex Rangsit', 'distance': '25.40 km'},
+    {'name': 'Major Cineplex Bangna', 'distance': '15.80 km'},
+    {'name': 'Major Cineplex Central Westgate', 'distance': '20.10 km'},
+    {'name': 'Major Cineplex Fashion Island', 'distance': '18.50 km'},
+    {'name': 'Major Cineplex Central Rama 2', 'distance': '22.30 km'},
+    {'name': 'Major Cineplex Central Chiangmai', 'distance': '700 km'},
+    {'name': 'Major Cineplex Central Hatyai', 'distance': '950 km'},
+    {'name': 'Major Cineplex Udon Thani', 'distance': '550 km'},
+    {'name': 'Major Cineplex Korat', 'distance': '260 km'},
+    {'name': 'Major Cineplex Central Pattaya', 'distance': '140 km'},
+    {'name': 'Major Cineplex Central Ubon Ratchathani', 'distance': '615 km'},
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -19,7 +38,6 @@ class _CinemasScreenState extends State<CinemasListScreen> {
         title: Text('Cinemas', style: TextStyle(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold)),
         elevation: 0,
       ),
-      
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -79,13 +97,36 @@ class _CinemasScreenState extends State<CinemasListScreen> {
           ),
           SizedBox(height: 8),
           Expanded(
-            child: ListView(
-              children: [
-                _cinemaTile('ICON CINECONIC', '3.43 km'),
-                _cinemaTile('Major Cineplex Pinklao', '3.59 km'),
-                _cinemaTile('Paragon Cineplex', '3.73 km'),
-                _cinemaTile('Krungsri IMAX LASER Paragon Cineplex', '3.81 km'),
-              ],
+            child: ListView.builder(
+              itemCount: cinemas.length,
+              itemBuilder: (context, index) {
+                final cinema = cinemas[index];
+                return ListTile(
+                  contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
+                  title: Text(cinema['name'], style: TextStyle(color: Colors.white)),
+                  subtitle: Text(cinema['distance'], style: TextStyle(color: Colors.grey)),
+                  trailing: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.star_border, color: Colors.amber),
+                      SizedBox(width: 16),
+                      Icon(Icons.share, color: Colors.grey),
+                    ],
+                  ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CinemaScreen(
+                          cinemaName: cinema['name'],
+                          cinemaImage: "URL ของรูปโรงหนัง",
+                          location: "ที่อยู่ของโรงหนัง",
+                        ),
+                      ),
+                    );
+                  },
+                );
+              },
             ),
           ),
         ],
@@ -96,36 +137,6 @@ class _CinemasScreenState extends State<CinemasListScreen> {
         icon: Icon(Icons.map, color: Colors.black),
         label: Text('MAP', style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold)),
       ),
-    );
-  }
-
-  Widget _cinemaTile(String name, String distance) {
-    return ListTile(
-      contentPadding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
-      title: Text(name, style: TextStyle(color: Colors.white)),
-      subtitle: Text(distance, style: TextStyle(color: Colors.grey)),
-      trailing: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(Icons.star_border, color: Colors.amber),
-          SizedBox(width: 16),
-          Icon(Icons.share, color: Colors.grey),
-        ],
-      ),
-      // ✅ เพิ่ม GestureDetector ให้สามารถกดไปหน้า CinemaScreen ได้
-      onTap: () {
-        Navigator.push(
-  context,
-  MaterialPageRoute(
-    builder: (context) => CinemaScreen(
-      cinemaName: name, 
-      cinemaImage: "URL ของรูปโรงหนัง", // แทนที่ด้วย URL ของภาพโรงหนัง
-      location: "ที่อยู่ของโรงหนัง", // แทนที่ด้วยที่อยู่จริงของโรงหนัง
-    ),
-  ),
-);
-
-      },
     );
   }
 }

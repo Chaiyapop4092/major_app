@@ -1,6 +1,21 @@
 import 'package:flutter/material.dart';
 
 class DiscountsScreen extends StatelessWidget {
+  final List<Map<String, String>> discountData = [
+    {
+      'image': 'assets/images/discount0.jpg',
+      'title': 'M-Coupon: Discount 69 THB',
+    },
+    {
+      'image': 'assets/images/discount1.jpg',
+      'title': 'M-Coupon: Discount 50 THB',
+    },
+    {
+      'image': 'assets/images/discount2.jpg',
+      'title': 'M-Coupon: Discount 100 THB For IMAX',
+    },
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,15 +25,15 @@ class DiscountsScreen extends StatelessWidget {
         title: Text('Discounts', style: TextStyle(color: Colors.white)),
         centerTitle: true,
       ),
-      
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              child: Image.asset('assets/images/ads1.jpg'),
-            ),
+            Center(
+  child: Image.asset('assets/images/ads1.jpg'),
+),
+
             SizedBox(height: 16),
             Row(
               children: [
@@ -67,7 +82,6 @@ class DiscountsScreen extends StatelessWidget {
                 ),
               ),
             ),
-            
             SizedBox(height: 16),
             GridView.builder(
               shrinkWrap: true,
@@ -77,7 +91,7 @@ class DiscountsScreen extends StatelessWidget {
                 crossAxisSpacing: 10,
                 mainAxisSpacing: 10,
               ),
-              itemCount: 8, // Example count
+              itemCount: 8,
               itemBuilder: (context, index) {
                 return Container(
                   decoration: BoxDecoration(
@@ -102,17 +116,16 @@ class DiscountsScreen extends StatelessWidget {
                 style: TextStyle(color: Colors.amber, fontSize: 16),
               ),
             ),
-            
             SizedBox(height: 16),
             Expanded(
               child: ListView.builder(
-                itemCount: 3, // Example count
+                itemCount: discountData.length,
                 itemBuilder: (context, index) {
                   return Card(
                     color: Colors.grey[900],
                     child: ListTile(
-                      leading: Image.asset('assets/images/discount$index.jpg'),
-                      title: Text('M-Coupon: Discount 50 THB', style: TextStyle(color: Colors.white)),
+                      leading: Image.asset(discountData[index]['image']!),
+                      title: Text(discountData[index]['title']!, style: TextStyle(color: Colors.white)),
                     ),
                   );
                 },

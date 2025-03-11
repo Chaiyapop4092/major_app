@@ -100,26 +100,29 @@ class CinemaScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildDateSelector() {
-    return SizedBox(
-      height: 60,
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            _dateTile('Today', '2', true),
-            _dateTile('Mon', '3', false),
-            _dateTile('Tue', '4', false),
-            _dateTile('Wed', '5', false),
-            _dateTile('Thu', '6', false),
-            _dateTile('Fri', '7', false),
-            _dateTile('Sat', '8', false),
-            _dateTile('Sun', '9', false),
-          ],
-        ),
+ Widget _buildDateSelector() {
+  DateTime today = DateTime.now();
+  return SizedBox(
+    height: 60,
+    child: SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: List.generate(7, (index) {
+          DateTime date = today.add(Duration(days: index));
+          String day = _getWeekday(date.weekday);
+          return _dateTile(day, date.day.toString(), index == 0);
+        }),
       ),
-    );
-  }
+    ),
+  );
+}
+
+// ฟังก์ชันช่วยแปลงค่าตัวเลขวันของสัปดาห์เป็นชื่อย่อ
+String _getWeekday(int weekday) {
+  List<String> weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  return weekdays[weekday % 7];
+}
+
 
   Widget _dateTile(String day, String date, bool isSelected) {
     return Padding(
